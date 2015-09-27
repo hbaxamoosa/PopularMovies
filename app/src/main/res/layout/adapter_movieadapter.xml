@@ -5,5 +5,4 @@
     android:columnWidth="90dp"
     android:gravity="center"
     android:numColumns="auto_fit"
-    android:src="@drawable/sample_0"
     android:stretchMode="columnWidth" />

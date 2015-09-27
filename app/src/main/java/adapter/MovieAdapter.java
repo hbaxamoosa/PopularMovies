@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.baxamoosa.popularmovies.DetailActivity;
 import com.baxamoosa.popularmovies.R;
+import com.squareup.picasso.Picasso;
 
 import timber.log.Timber;
 
@@ -28,12 +29,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     @Override
     public void onBindViewHolder(MovieAdapter.MovieAdapterViewHolder movieAdapterViewHolder, int i) {
         Timber.v(TAG + " inside onBindViewHolder");
-        //movieAdapterViewHolder.itemView.setImageResource(R.id.);
+        Picasso.with(movieAdapterViewHolder.itemView.getContext()).load("http://i.imgur.com/DvpvklR.png").into(movieAdapterViewHolder.imageView);
     }
 
     @Override
     public int getItemCount() {
-        return 6;
+        return 12;
     }
 
     public class MovieAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -45,6 +46,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
             Timber.v(TAG + " inside MovieAdapterViewHolder(View itemView)");
             imageView = (ImageView) itemView.findViewById(R.id.imageView);
+            //Picasso.with(itemView.getContext()).load("http://i.imgur.com/DvpvklR.png").into(imageView);
             itemView.setOnClickListener(this);
         }
 
