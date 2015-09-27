@@ -16,6 +16,7 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         Timber.v(TAG + " " + "Activity Created");
+        // Todo: update the activity_detail layout
     }
 
     @Override
