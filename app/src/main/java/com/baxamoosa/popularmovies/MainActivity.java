@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 import adapter.MovieAdapter;
 import model.Movie;
@@ -30,15 +31,34 @@ import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity {
 
+
     private final String TAG = MainActivity.class.getSimpleName();
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
+    private ArrayList<Movie> listOfMovies;
+    private String mSortBy;
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putParcelableArrayList("key", listOfMovies);
+        outState.putString("sort_by", mSortBy);
+        super.onSaveInstanceState(outState);
+        Timber.v(TAG + " onSaveInstanceState");
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            Timber.v(TAG + " savedInstanceState != null");
+            listOfMovies = (ArrayList<Movie>) savedInstanceState.get("key");
+            mSortBy = savedInstanceState.getString("sort_by");
+        }
+
         setContentView(R.layout.activity_main);
 
         Timber.v(TAG + " Activity Created");
@@ -55,6 +75,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        // get sort by from share preference
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String sortBy = sharedPref.getString(
+                getString(R.string.prefs_sorting_key),
+                getString(R.string.prefs_sorting_default));
+
+        if (mSortBy == null || mSortBy.compareTo(sortBy) != 0) {
+            mSortBy = sortBy;
+
+            // if back from settings activity, the preference value may be changed
+            FetchMoviesTask moviesTask = new FetchMoviesTask();
+            moviesTask.execute();
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -65,10 +103,6 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             startActivity(new Intent(this, SettingsActivity.class));
             return true;
-        }
-        if (id == R.id.action_refresh) {
-            FetchMoviesTask moviesTask = new FetchMoviesTask();
-            moviesTask.execute();
         }
 
         return super.onOptionsItemSelected(item);
