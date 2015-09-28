@@ -4,19 +4,37 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
+import model.Movie;
 import timber.log.Timber;
 
 public class DetailActivity extends AppCompatActivity {
 
     private final String TAG = DetailActivity.class.getSimpleName();
+    private Movie mMovie;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         Timber.v(TAG + " " + "Activity Created");
-        // Todo: update the activity_detail layout
+
+        ImageView poster_thumbnail = (ImageView) findViewById(R.id.poster_thumbnail);
+        TextView title = (TextView) findViewById(R.id.title);
+        TextView release_date = (TextView) findViewById(R.id.release_date);
+        TextView rating = (TextView) findViewById(R.id.rating);
+        TextView synopsis = (TextView) findViewById(R.id.synopsis);
+
+        String poster_path = "http://image.tmdb.org/t/p/w500/" + getIntent().getExtras().getString("poster_thumbnail");
+        Picasso.with(this).load(poster_path).into(poster_thumbnail);
+        title.setText(getIntent().getExtras().getString("title"));
+        release_date.setText(getIntent().getExtras().getString("release_date"));
+        rating.setText((getIntent().getExtras().getString("rating")));
+        synopsis.setText((getIntent().getExtras().getString("synopsis")));
     }
 
     @Override

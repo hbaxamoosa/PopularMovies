@@ -7,7 +7,7 @@
         android:defaultValue="@string/most_popular"
         android:entries="@array/listing_options"
         android:entryValues="@array/listing_values"
-        android:key="@string/sorting_key"
+        android:key="@string/prefs_sorting_key"
         android:title="@string/sorting_label" />
 
 </PreferenceScreen>

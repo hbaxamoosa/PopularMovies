@@ -7,6 +7,9 @@ public class Movie {
     private String rating;
     private String date;
 
+    public Movie() {
+    }
+
     public String getTitle() {
         return title;
     }

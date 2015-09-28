@@ -1,14 +1,15 @@
 package com.baxamoosa.popularmovies;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -24,6 +25,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import adapter.MovieAdapter;
+import model.Movie;
 import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity {
@@ -39,15 +41,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Timber.v(TAG + "Activity Created");
-
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new GridLayoutManager(this, 2);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mAdapter = new MovieAdapter();
-        mRecyclerView.setAdapter(mAdapter);
+        Timber.v(TAG + " Activity Created");
 
         FetchMoviesTask moviesTask = new FetchMoviesTask();
         moviesTask.execute();
@@ -72,18 +66,47 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(this, SettingsActivity.class));
             return true;
         }
+        if (id == R.id.action_refresh) {
+            FetchMoviesTask moviesTask = new FetchMoviesTask();
+            moviesTask.execute();
+        }
 
         return super.onOptionsItemSelected(item);
     }
 
-    public class FetchMoviesTask extends AsyncTask<Void, Void, String> {
+    public class FetchMoviesTask extends AsyncTask<Void, Void, Movie[]> {
 
         private final String TAG = FetchMoviesTask.class.getSimpleName();
+        private String sort_type;
+        private String sort;
 
         @Override
         protected void onPreExecute() {
-            Timber.v(TAG, "inside onPreExecute");
+            Timber.v(TAG + "inside onPreExecute");
             super.onPreExecute();
+
+            // Getting sort order preference
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            String sort_type = sharedPref.getString(getString(R.string.prefs_sorting_key), getString(R.string.prefs_sorting_default));
+
+            Timber.v(TAG + " sort_type = " + sort_type);
+            if (sort_type.equals(getString(R.string.most_popular))) {
+                sort = "popularity.desc";
+            } else if (sort_type.equals(getString(R.string.highest_rated))) {
+                sort = "vote_count.desc";
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Movie[] movies) {
+            super.onPostExecute(movies);
+            mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+            mRecyclerView.setHasFixedSize(true);
+            mLayoutManager = new GridLayoutManager(getApplicationContext(), 2);
+            mRecyclerView.setLayoutManager(mLayoutManager);
+            mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+            mAdapter = new MovieAdapter(movies);
+            mRecyclerView.setAdapter(mAdapter);
         }
 
         @Override
@@ -92,8 +115,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        protected String doInBackground(Void... params) {
-            Timber.v(TAG, "inside doInBackground");
+        protected Movie[] doInBackground(Void... params) {
+            Timber.v(TAG + "inside doInBackground");
 
             // These two need to be declared outside the try/catch
             // so that they can be closed in the finally block.
@@ -102,11 +125,9 @@ public class MainActivity extends AppCompatActivity {
 
             // Will contain the raw JSON response as a string.
             String moviesJsonStr = null;
-            String most_popular = "popularity.desc";
-            String highest_rated = "vote_count.desc";
+
             String api_key = Constants.api_key;
 
-            // Todo: use the Settings Prefs to determine sort type
             try {
                 // Construct the URL for the themoviedb.org API
                 final String BASE_URL = "http://api.themoviedb.org/3/discover/movie?";
@@ -114,13 +135,13 @@ public class MainActivity extends AppCompatActivity {
                 final String API_KEY = "api_key";
 
                 Uri builtUri = Uri.parse(BASE_URL).buildUpon()
-                        .appendQueryParameter(SORT_PARAM, most_popular)
+                        .appendQueryParameter(SORT_PARAM, sort)
                         .appendQueryParameter(API_KEY, api_key)
                         .build();
 
                 URL url = new URL(builtUri.toString());
 
-                Timber.v(TAG, "Built URI " + builtUri.toString());
+                Timber.v(TAG + "Built URI " + builtUri.toString());
 
                 // Create the request to OpenWeatherMap, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
@@ -149,10 +170,9 @@ public class MainActivity extends AppCompatActivity {
                     return null;
                 }
                 moviesJsonStr = buffer.toString();
-                Timber.v(TAG, moviesJsonStr);
-                Log.v(TAG, "moviesJsonStr: " + moviesJsonStr);
+                Timber.v(TAG + moviesJsonStr);
             } catch (IOException e) {
-                Log.e(TAG, "Error ", e);
+                Timber.e(TAG + "Error " + e);
                 // If the code didn't successfully get the weather data, there's no point in attemping
                 // to parse it.
                 return null;
@@ -164,61 +184,64 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         reader.close();
                     } catch (final IOException e) {
-                        Log.e(TAG, "Error closing stream", e);
+                        Timber.e(TAG + "Error closing stream " + e);
                     }
                 }
             }
             try {
                 return getMoviesFromJson(moviesJsonStr);
             } catch (JSONException e) {
-                Log.e(TAG, e.getMessage(), e);
+                Timber.e(TAG + e.getMessage() + e);
                 e.printStackTrace();
             }
             return null;
         }
 
-        private String getMoviesFromJson(String moviesJsonStr) throws JSONException {
-            String resultStr = new String("nothing");
-
-            Timber.v(TAG, resultStr);
+        private Movie[] getMoviesFromJson(String moviesJsonStr) throws JSONException {
             final String moviesJson = "results";
-            Timber.v(TAG, moviesJson);
+            Timber.v(TAG + moviesJson);
+
+            // Create JSONObject from results string
             JSONObject moviesJsonObj = new JSONObject(moviesJsonStr);
+
+            // Create JSONArray from JSONObject
             JSONArray moviesArray = moviesJsonObj.getJSONArray(moviesJson);
 
-            for (int i = 0; i < moviesArray.length(); i++) {
-                int id;
-                String original_title;
-                String overview;
-                String release_date;
-                String poster_path;
+            Timber.v(TAG + " " + "JSONObject movie size = " + moviesArray.length());
 
-                // Get JSON object respresenting a single movie
+            // Create Movie objects array
+            Movie[] movies = new Movie[moviesArray.length()];
+            Timber.v(TAG + " " + "moviesArray.length()" + " " + moviesArray.length());
+
+            for (int i = 0; i < moviesArray.length(); i++) {
+                Timber.v(TAG + "i = " + i);
+                // Get JSON object representing a single movie
                 JSONObject movie = moviesArray.getJSONObject(i);
 
+                movies[i] = new Movie();
                 // Get title
-                original_title = movie.getString("original_title");
-                //Timber.v(TAG, original_title);
-                Log.v(TAG, "original_title: " + original_title);
+                Timber.v(TAG + " " + "original_title :" + " " + movie.getString("original_title"));
+                movies[i].setTitle(movie.optString("original_title").toString());
 
                 // Get synopsis
-                overview = movie.getString("overview");
-                //Timber.v(TAG, overview);
-                Log.v(TAG, "overview: " + overview);
+                Timber.v(TAG + " " + "overview :" + " " + movie.getString("overview"));
+                movies[i].setSynopsis(movie.getString("overview"));
 
                 // Get release date
-                release_date = movie.getString("release_date");
-                //Timber.v(TAG, release_date);
-                Log.v(TAG, "release_date: " + release_date);
+                Timber.v(TAG + " " + "release_date :" + " " + movie.getString("release_date"));
+                movies[i].setDate(movie.getString("release_date"));
 
                 // Get poster path
-                poster_path = movie.getString("poster_path");
-                //Timber.v(TAG, poster_path);
-                Log.v(TAG, "poster_path: " + poster_path);
+                Timber.v(TAG + " " + "poster_path :" + " " + movie.getString("poster_path"));
+                movies[i].setThumbnail(movie.getString("poster_path"));
 
-                // Todo: construct an array of Movie objects and pass to the MovieAdapter
+                // Get rating
+                Timber.v(TAG + " " + "vote_average :" + " " + movie.getString("vote_average"));
+                movies[i].setRating(movie.getString("vote_average"));
             }
-            return resultStr;
+
+            Timber.v(TAG + " " + "JSONObject movie size = " + movies.length);
+            return movies;
         }
     }
 
