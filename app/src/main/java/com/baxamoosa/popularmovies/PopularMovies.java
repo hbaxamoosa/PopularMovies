@@ -1,14 +1,23 @@
 package com.baxamoosa.popularmovies;
 
 import android.app.Application;
+import android.content.Context;
 import android.util.Log;
 
 import timber.log.Timber;
 
 public class PopularMovies extends Application {
+
+    private static Context context;
+
+    public static Context getAppContext() {
+        return PopularMovies.context;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
+        PopularMovies.context = getApplicationContext();
 
         //Including Jake Wharton's Timber logging library
         if (BuildConfig.DEBUG) {
