@@ -2,6 +2,7 @@ package network;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -25,6 +26,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import adapter.MovieAdapter;
 import model.Movie;
@@ -70,7 +74,18 @@ public class FetchMoviesTask extends AsyncTask<Void, Void, Movie[]> {
         super.onPostExecute(movies);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
         mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new GridLayoutManager(PopularMovies.getAppContext(), 2);
+
+        // check to see if the phone is in portrait or landscape
+        switch (context.getResources().getConfiguration().orientation) {
+            case Configuration.ORIENTATION_PORTRAIT:
+                //Toast.makeText(this.context, "screen is in portrait", Toast.LENGTH_LONG).show();
+                mLayoutManager = new GridLayoutManager(PopularMovies.getAppContext(), 2);
+                break;
+            case Configuration.ORIENTATION_LANDSCAPE:
+                //Toast.makeText(this.context, "screen is in landscape", Toast.LENGTH_LONG).show();
+                mLayoutManager = new GridLayoutManager(PopularMovies.getAppContext(), 4);
+                break;
+        }
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mAdapter = new MovieAdapter(movies);
@@ -94,8 +109,6 @@ public class FetchMoviesTask extends AsyncTask<Void, Void, Movie[]> {
         // Will contain the raw JSON response as a string.
         String moviesJsonStr = null;
 
-        String api_key = Constants.api_key;
-
         try {
             // Construct the URL for the themoviedb.org API
             final String BASE_URL = "http://api.themoviedb.org/3/discover/movie?";
@@ -104,7 +117,7 @@ public class FetchMoviesTask extends AsyncTask<Void, Void, Movie[]> {
 
             Uri builtUri = Uri.parse(BASE_URL).buildUpon()
                     .appendQueryParameter(SORT_PARAM, sort)
-                    .appendQueryParameter(API_KEY, api_key)
+                    .appendQueryParameter(API_KEY, Constants.api_key)
                     .build();
 
             URL url = new URL(builtUri.toString());
@@ -197,7 +210,15 @@ public class FetchMoviesTask extends AsyncTask<Void, Void, Movie[]> {
 
             // Get release date
             Timber.v(TAG + " " + "release_date :" + " " + movie.getString("release_date"));
-            movies[i].setDate(movie.getString("release_date"));
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Calendar c = Calendar.getInstance();
+            try {
+                c.setTime(simpleDateFormat.parse(movie.getString("release_date")));
+                Timber.v(TAG + " " + "Year :" + " " + c.get(Calendar.YEAR));
+                movies[i].setDate(String.valueOf(c.get(Calendar.YEAR)));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
 
             // Get poster path
             Timber.v(TAG + " " + "poster_path :" + " " + movie.getString("poster_path"));

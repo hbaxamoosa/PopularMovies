@@ -4,8 +4,11 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -13,6 +16,8 @@ import model.Movie;
 import timber.log.Timber;
 
 public class DetailActivity extends AppCompatActivity {
+
+    // TODO: convert this activity into a Fragment
 
     private final String TAG = DetailActivity.class.getSimpleName();
     private Movie mMovie;
@@ -28,6 +33,7 @@ public class DetailActivity extends AppCompatActivity {
         TextView release_date = (TextView) findViewById(R.id.release_date);
         TextView rating = (TextView) findViewById(R.id.rating);
         TextView synopsis = (TextView) findViewById(R.id.synopsis);
+        Button favorite = (Button) findViewById(R.id.btn_favorite);
 
         String poster_path = "http://image.tmdb.org/t/p/w500/" + getIntent().getExtras().getString("poster_thumbnail");
         Picasso.with(this).load(poster_path).into(poster_thumbnail);
@@ -35,6 +41,13 @@ public class DetailActivity extends AppCompatActivity {
         release_date.setText(getIntent().getExtras().getString("release_date"));
         rating.setText((getIntent().getExtras().getString("rating")));
         synopsis.setText((getIntent().getExtras().getString("synopsis")));
+    }
+
+    public void setFavorite (View v){
+        Toast.makeText(this, "clicked favorite button", Toast.LENGTH_LONG).show();
+        // TODO: implement DB actions to store favorites. If the movie is not in favorties, add.
+        // If the movie is already in favorites, allow the user the option to remove from favorites
+
     }
 
     @Override
