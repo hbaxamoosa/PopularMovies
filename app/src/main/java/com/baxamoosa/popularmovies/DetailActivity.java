@@ -28,12 +28,18 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
         Timber.v(TAG + " " + "Activity Created");
 
+        Timber.v(TAG + " id : " + getIntent().getExtras().getString("id"));
+
         ImageView poster_thumbnail = (ImageView) findViewById(R.id.poster_thumbnail);
         TextView title = (TextView) findViewById(R.id.title);
         TextView release_date = (TextView) findViewById(R.id.release_date);
         TextView rating = (TextView) findViewById(R.id.rating);
         TextView synopsis = (TextView) findViewById(R.id.synopsis);
         Button favorite = (Button) findViewById(R.id.btn_favorite);
+        // Add a button here for movie trailers
+        // use the key from the JSON response like this: https://www.youtube.com/watch?v=8hP9D6kZseM
+        // where v is the key value
+
 
         String poster_path = "http://image.tmdb.org/t/p/w500/" + getIntent().getExtras().getString("poster_thumbnail");
         Picasso.with(this).load(poster_path).into(poster_thumbnail);

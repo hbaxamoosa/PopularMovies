@@ -37,7 +37,7 @@ import timber.log.Timber;
 public class FetchMoviesTask extends AsyncTask<Void, Void, Movie[]> {
 
     private final String TAG = FetchMoviesTask.class.getSimpleName();
-    private Context context; // this is not being used and can be removed
+    private Context context;
     private View rootView;
     private String sort;
     private RecyclerView mRecyclerView;
@@ -154,8 +154,6 @@ public class FetchMoviesTask extends AsyncTask<Void, Void, Movie[]> {
             Timber.v(TAG + moviesJsonStr);
         } catch (IOException e) {
             Timber.e(TAG + "Error " + e);
-            // If the code didn't successfully get the weather data, there's no point in attemping
-            // to parse it.
             return null;
         } finally {
             if (urlConnection != null) {
@@ -180,7 +178,7 @@ public class FetchMoviesTask extends AsyncTask<Void, Void, Movie[]> {
 
     private Movie[] getMoviesFromJson(String moviesJsonStr) throws JSONException {
         final String moviesJson = "results";
-        Timber.v(TAG + moviesJson);
+        Timber.v(TAG + " " + moviesJson);
 
         // Create JSONObject from results string
         JSONObject moviesJsonObj = new JSONObject(moviesJsonStr);
@@ -200,9 +198,15 @@ public class FetchMoviesTask extends AsyncTask<Void, Void, Movie[]> {
             JSONObject movie = moviesArray.getJSONObject(i);
 
             movies[i] = new Movie();
+
+            // get id
+            Timber.v(TAG + " " + "id :" + " " + movie.getString("id"));
+            movies[i].setId(movie.getString("id"));
+
+
             // Get title
             Timber.v(TAG + " " + "original_title :" + " " + movie.getString("original_title"));
-            movies[i].setTitle(movie.optString("original_title").toString());
+            movies[i].setTitle(movie.getString("original_title"));
 
             // Get synopsis
             Timber.v(TAG + " " + "overview :" + " " + movie.getString("overview"));

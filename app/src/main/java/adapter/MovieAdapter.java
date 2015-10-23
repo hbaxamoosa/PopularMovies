@@ -13,6 +13,8 @@ import com.baxamoosa.popularmovies.R;
 import com.squareup.picasso.Picasso;
 
 import model.Movie;
+import network.FetchMovieReviewsTask;
+import network.FetchMovieTrailersTask;
 import timber.log.Timber;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapterViewHolder> {
@@ -65,13 +67,23 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
             int position = getLayoutPosition();
             Context context = itemView.getContext();
             Timber.v(TAG + " inside onClick(View v)");
-            //Toast.makeText(v.getContext(), "position = " + position, Toast.LENGTH_SHORT).show();
+            // TODO: make a asynctask call to get trailers and reviews for the specific movie
             Intent intent = new Intent(context, DetailActivity.class);
+            intent.putExtra("id", mMovies[position].getId());
             intent.putExtra("title", mMovies[position].getTitle());
             intent.putExtra("poster_thumbnail", mMovies[position].getThumbnail());
             intent.putExtra("release_date", mMovies[position].getDate());
             intent.putExtra("rating", mMovies[position].getRating());
             intent.putExtra("synopsis", mMovies[position].getSynopsis());
+
+            // Use the id to get the trailers
+            FetchMovieTrailersTask trailersTask = new FetchMovieTrailersTask(mMovies[position].getId());
+            trailersTask.execute();
+
+            // Use the id to get the reviews
+            FetchMovieReviewsTask reviewsTask = new FetchMovieReviewsTask(mMovies[position].getId());
+            reviewsTask.execute();
+
             context.startActivity(intent);
         }
     }

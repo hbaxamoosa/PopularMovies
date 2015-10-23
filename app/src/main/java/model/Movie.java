@@ -15,6 +15,9 @@ public class Movie implements Parcelable {
             return new Movie[size];
         }
     };
+
+    // TODO add the "id" for the movie, to be used in retrieving the trailers and reviews
+    private String id;
     private String title;
     private String thumbnail;
     private String synopsis;
@@ -25,11 +28,20 @@ public class Movie implements Parcelable {
     }
 
     protected Movie(Parcel in) {
+        id = in.readString();
         title = in.readString();
         thumbnail = in.readString();
         synopsis = in.readString();
         rating = in.readString();
         date = in.readString();
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -79,6 +91,7 @@ public class Movie implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
         dest.writeString(title);
         dest.writeString(thumbnail);
         dest.writeString(synopsis);
