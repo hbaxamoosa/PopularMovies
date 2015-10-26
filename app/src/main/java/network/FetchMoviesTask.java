@@ -52,8 +52,7 @@ public class FetchMoviesTask extends AsyncTask<Void, Void, Movie[]> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        Timber.v(TAG + "inside onPreExecute");
-        super.onPreExecute();
+        //Timber.v(TAG + " inside onPreExecute");
 
         Resources res = PopularMovies.getAppContext().getResources();
 
@@ -61,7 +60,7 @@ public class FetchMoviesTask extends AsyncTask<Void, Void, Movie[]> {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(PopularMovies.getAppContext());
         String sort_type = sharedPref.getString(res.getString(R.string.prefs_sorting_key), res.getString(R.string.prefs_sorting_default));
 
-        Timber.v(TAG + " sort_type = " + sort_type);
+        // Timber.v(TAG + " sort_type = " + sort_type);
         if (sort_type.equals(res.getString(R.string.most_popular))) {
             sort = "popularity.desc";
         } else if (sort_type.equals(res.getString(R.string.highest_rated))) {
@@ -99,7 +98,7 @@ public class FetchMoviesTask extends AsyncTask<Void, Void, Movie[]> {
 
     @Override
     protected Movie[] doInBackground(Void... params) {
-        Timber.v(TAG + "inside doInBackground");
+        // Timber.v(TAG + " inside doInBackground");
 
         // These two need to be declared outside the try/catch
         // so that they can be closed in the finally block.
@@ -122,7 +121,7 @@ public class FetchMoviesTask extends AsyncTask<Void, Void, Movie[]> {
 
             URL url = new URL(builtUri.toString());
 
-            Timber.v(TAG + "Built URI " + builtUri.toString());
+            // Timber.v(TAG + " Built URI " + builtUri.toString());
 
             // Create the request to OpenWeatherMap, and open the connection
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -153,7 +152,7 @@ public class FetchMoviesTask extends AsyncTask<Void, Void, Movie[]> {
             moviesJsonStr = buffer.toString();
             Timber.v(TAG + moviesJsonStr);
         } catch (IOException e) {
-            Timber.e(TAG + "Error " + e);
+            Timber.e(TAG + " Error " + e);
             return null;
         } finally {
             if (urlConnection != null) {
@@ -163,7 +162,7 @@ public class FetchMoviesTask extends AsyncTask<Void, Void, Movie[]> {
                 try {
                     reader.close();
                 } catch (final IOException e) {
-                    Timber.e(TAG + "Error closing stream " + e);
+                    Timber.e(TAG + " Error closing stream " + e);
                 }
             }
         }
@@ -178,7 +177,7 @@ public class FetchMoviesTask extends AsyncTask<Void, Void, Movie[]> {
 
     private Movie[] getMoviesFromJson(String moviesJsonStr) throws JSONException {
         final String moviesJson = "results";
-        Timber.v(TAG + " " + moviesJson);
+        // Timber.v(TAG + " moviesJson: " + moviesJson);
 
         // Create JSONObject from results string
         JSONObject moviesJsonObj = new JSONObject(moviesJsonStr);
@@ -186,54 +185,51 @@ public class FetchMoviesTask extends AsyncTask<Void, Void, Movie[]> {
         // Create JSONArray from JSONObject
         JSONArray moviesArray = moviesJsonObj.getJSONArray(moviesJson);
 
-        Timber.v(TAG + " " + "JSONObject movie size = " + moviesArray.length());
+        // Timber.v(TAG + " JSONObject movie size = " + moviesArray.length());
 
         // Create Movie objects array
         Movie[] movies = new Movie[moviesArray.length()];
-        Timber.v(TAG + " " + "moviesArray.length()" + " " + moviesArray.length());
+        // Timber.v(TAG + " moviesArray.length()" + " " + moviesArray.length());
 
         for (int i = 0; i < moviesArray.length(); i++) {
-            Timber.v(TAG + "i = " + i);
+            // Timber.v(TAG + " i = " + i);
             // Get JSON object representing a single movie
             JSONObject movie = moviesArray.getJSONObject(i);
 
             movies[i] = new Movie();
 
             // get id
-            Timber.v(TAG + " " + "id :" + " " + movie.getString("id"));
+            // Timber.v(TAG + " id :" + " " + movie.getString("id"));
             movies[i].setId(movie.getString("id"));
 
-
             // Get title
-            Timber.v(TAG + " " + "original_title :" + " " + movie.getString("original_title"));
+            // Timber.v(TAG + " original_title :" + " " + movie.getString("original_title"));
             movies[i].setTitle(movie.getString("original_title"));
 
             // Get synopsis
-            Timber.v(TAG + " " + "overview :" + " " + movie.getString("overview"));
+            // Timber.v(TAG + " overview :" + " " + movie.getString("overview"));
             movies[i].setSynopsis(movie.getString("overview"));
 
             // Get release date
-            Timber.v(TAG + " " + "release_date :" + " " + movie.getString("release_date"));
+            // Timber.v(TAG + " release_date :" + " " + movie.getString("release_date"));
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
             Calendar c = Calendar.getInstance();
             try {
                 c.setTime(simpleDateFormat.parse(movie.getString("release_date")));
-                Timber.v(TAG + " " + "Year :" + " " + c.get(Calendar.YEAR));
+                // Timber.v(TAG + " Year :" + " " + c.get(Calendar.YEAR));
                 movies[i].setDate(String.valueOf(c.get(Calendar.YEAR)));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
 
             // Get poster path
-            Timber.v(TAG + " " + "poster_path :" + " " + movie.getString("poster_path"));
+            // Timber.v(TAG + " poster_path :" + " " + movie.getString("poster_path"));
             movies[i].setThumbnail(movie.getString("poster_path"));
 
             // Get rating
-            Timber.v(TAG + " " + "vote_average :" + " " + movie.getString("vote_average"));
+            // Timber.v(TAG + " vote_average :" + " " + movie.getString("vote_average"));
             movies[i].setRating(movie.getString("vote_average"));
         }
-
-        Timber.v(TAG + " " + "JSONObject movie size = " + movies.length);
         return movies;
     }
 }

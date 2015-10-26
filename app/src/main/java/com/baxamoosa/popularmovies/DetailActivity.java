@@ -12,7 +12,8 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
-import model.Movie;
+import network.FetchMovieReviewsTask;
+import network.FetchMovieTrailersTask;
 import timber.log.Timber;
 
 public class DetailActivity extends AppCompatActivity {
@@ -20,7 +21,6 @@ public class DetailActivity extends AppCompatActivity {
     // TODO: convert this activity into a Fragment
 
     private final String TAG = DetailActivity.class.getSimpleName();
-    private Movie mMovie;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +40,13 @@ public class DetailActivity extends AppCompatActivity {
         // use the key from the JSON response like this: https://www.youtube.com/watch?v=8hP9D6kZseM
         // where v is the key value
 
+        // Use the id to get the trailers
+        FetchMovieTrailersTask trailersTask = new FetchMovieTrailersTask(this, getIntent().getExtras().getString("id"), this.findViewById(android.R.id.content).getRootView());
+        trailersTask.execute();
+
+        // Use the id to get the reviews
+        FetchMovieReviewsTask reviewsTask = new FetchMovieReviewsTask(this, getIntent().getExtras().getString("id"), this.findViewById(android.R.id.content).getRootView());
+        reviewsTask.execute();
 
         String poster_path = "http://image.tmdb.org/t/p/w500/" + getIntent().getExtras().getString("poster_thumbnail");
         Picasso.with(this).load(poster_path).into(poster_thumbnail);

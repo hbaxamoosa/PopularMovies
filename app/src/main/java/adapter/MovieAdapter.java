@@ -13,9 +13,6 @@ import com.baxamoosa.popularmovies.R;
 import com.squareup.picasso.Picasso;
 
 import model.Movie;
-import network.FetchMovieReviewsTask;
-import network.FetchMovieTrailersTask;
-import timber.log.Timber;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapterViewHolder> {
 
@@ -28,19 +25,19 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
     @Override
     public MovieAdapter.MovieAdapterViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        Timber.v(TAG + " inside onCreateViewHolder");
+        // Timber.v(TAG + " inside onCreateViewHolder");
         View itemView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.adapter_movieadapter, viewGroup, false);
         return new MovieAdapterViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(MovieAdapter.MovieAdapterViewHolder movieAdapterViewHolder, int i) {
-        Timber.v(TAG + " inside onBindViewHolder");
+        // Timber.v(TAG + " inside onBindViewHolder");
         String thumbnail = mMovies[i].getThumbnail();
-        Timber.v(TAG + " thumbnail = " + thumbnail);
+        // Timber.v(TAG + " thumbnail = " + thumbnail);
 
         String poster_path = "http://image.tmdb.org/t/p/w500/" + thumbnail;
-        Timber.v(TAG + " poster_path = " + poster_path);
+        // Timber.v(TAG + " poster_path = " + poster_path);
         Picasso.with(movieAdapterViewHolder.itemView.getContext()).load(poster_path).into(movieAdapterViewHolder.imageView);
     }
 
@@ -57,7 +54,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
         public MovieAdapterViewHolder(View itemView) {
             super(itemView);
 
-            Timber.v(TAG + " inside MovieAdapterViewHolder(View itemView)");
+            // Timber.v(TAG + " inside MovieAdapterViewHolder(View itemView)");
             imageView = (ImageView) itemView.findViewById(R.id.imageView);
             itemView.setOnClickListener(this);
         }
@@ -66,8 +63,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
         public void onClick(View v) {
             int position = getLayoutPosition();
             Context context = itemView.getContext();
-            Timber.v(TAG + " inside onClick(View v)");
-            // TODO: make a asynctask call to get trailers and reviews for the specific movie
+            // Timber.v(TAG + " inside onClick(View v)");
+
             Intent intent = new Intent(context, DetailActivity.class);
             intent.putExtra("id", mMovies[position].getId());
             intent.putExtra("title", mMovies[position].getTitle());
@@ -75,14 +72,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
             intent.putExtra("release_date", mMovies[position].getDate());
             intent.putExtra("rating", mMovies[position].getRating());
             intent.putExtra("synopsis", mMovies[position].getSynopsis());
-
-            // Use the id to get the trailers
-            FetchMovieTrailersTask trailersTask = new FetchMovieTrailersTask(mMovies[position].getId());
-            trailersTask.execute();
-
-            // Use the id to get the reviews
-            FetchMovieReviewsTask reviewsTask = new FetchMovieReviewsTask(mMovies[position].getId());
-            reviewsTask.execute();
 
             context.startActivity(intent);
         }

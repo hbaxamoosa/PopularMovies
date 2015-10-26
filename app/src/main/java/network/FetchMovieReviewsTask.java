@@ -1,9 +1,13 @@
 package network;
 
+import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.view.View;
+import android.widget.ListView;
 
 import com.baxamoosa.popularmovies.Constants;
+import com.baxamoosa.popularmovies.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -16,18 +20,23 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import adapter.MovieReviewsAdapter;
 import model.MovieReviews;
 import timber.log.Timber;
 
 public class FetchMovieReviewsTask extends AsyncTask<Void, Void, MovieReviews[]> {
 
     private final String TAG = FetchMovieReviewsTask.class.getSimpleName();
+    private Context mContext;
     private String id;
+    private View rootView;
 
-    public FetchMovieReviewsTask(String movieID) {
-        Timber.v(TAG + " inside FetchMovieReviewsTask constructor");
+    public FetchMovieReviewsTask(Context context, String movieID, View view) {
+        // Timber.v(TAG + " inside FetchMovieReviewsTask constructor");
+        mContext = context;
         id = movieID;
-        Timber.v(TAG + " id : " + id);
+        rootView = view;
+        // Timber.v(TAG + " id : " + id);
     }
 
     @Override
@@ -36,8 +45,12 @@ public class FetchMovieReviewsTask extends AsyncTask<Void, Void, MovieReviews[]>
     }
 
     @Override
-    protected void onPostExecute(MovieReviews[] movieReviewses) {
-        super.onPostExecute(movieReviewses);
+    protected void onPostExecute(MovieReviews[] movieReviews) {
+        super.onPostExecute(movieReviews);
+
+        ListView reviewsLV = (ListView) rootView.findViewById(R.id.listview_reviews);
+        MovieReviewsAdapter<MovieReviews[]> movieReviewAdapter = new MovieReviewsAdapter<MovieReviews[]>(mContext, movieReviews);
+        reviewsLV.setAdapter(movieReviewAdapter);
     }
 
     @Override
@@ -47,7 +60,7 @@ public class FetchMovieReviewsTask extends AsyncTask<Void, Void, MovieReviews[]>
 
     @Override
     protected MovieReviews[] doInBackground(Void... params) {
-        Timber.v(TAG + "inside doInBackground");
+        // Timber.v(TAG + " inside doInBackground");
 
         // These two need to be declared outside the try/catch
         // so that they can be closed in the finally block.
@@ -125,10 +138,10 @@ public class FetchMovieReviewsTask extends AsyncTask<Void, Void, MovieReviews[]>
     }
 
     private MovieReviews[] getReviewsFromJson(String reviewsJsonStr) throws JSONException {
-        Timber.v(TAG + "inside getReviewsFromJson " + reviewsJsonStr);
+        // Timber.v(TAG + " inside getReviewsFromJson " + reviewsJsonStr);
 
         final String reviewsJson = "results";
-        Timber.v(TAG + " " + reviewsJson);
+        //Timber.v(TAG + " " + reviewsJson);
 
         // Create JSONObject from results string
         JSONObject reviewsJsonObj = new JSONObject(reviewsJsonStr);
@@ -136,33 +149,31 @@ public class FetchMovieReviewsTask extends AsyncTask<Void, Void, MovieReviews[]>
         // Create JSONArray from JSONObject
         JSONArray reviewsArray = reviewsJsonObj.getJSONArray(reviewsJson);
 
-        Timber.v(TAG + " " + "JSONObject reviewsArray size = " + reviewsArray.length());
-
         // Create Movie objects array
-        MovieReviews[] reviews = new MovieReviews[reviewsArray.length()];
-        Timber.v(TAG + " " + "reviewsArray.length()" + " " + reviewsArray.length());
+        MovieReviews[] mMovieReviews = new MovieReviews[reviewsArray.length()];
+        //Timber.v(TAG + " " + "reviewsArray.length()" + " " + reviewsArray.length());
 
         for (int i = 0; i < reviewsArray.length(); i++) {
-            Timber.v(TAG + "i = " + i);
+            //Timber.v(TAG + " reviewsArray i = " + i);
+
             // Get JSON object representing a single movie
             JSONObject reviewsArrayJSONObject = reviewsArray.getJSONObject(i);
 
-            reviews[i] = new MovieReviews();
+            mMovieReviews[i] = new MovieReviews();
 
             // get id
-            Timber.v(TAG + " id :" + " " + reviewsArrayJSONObject.getString("id"));
-            reviews[i].setId(reviewsArrayJSONObject.getString("id"));
+            //Timber.v(TAG + " id :" + " " + reviewsArrayJSONObject.getString("id"));
+            mMovieReviews[i].setId(reviewsArrayJSONObject.getString("id"));
 
             // get author
-            Timber.v(TAG + " author :" + " " + reviewsArrayJSONObject.getString("author"));
-            reviews[i].setAuthor(reviewsArrayJSONObject.getString("author"));
+            //Timber.v(TAG + " author :" + " " + reviewsArrayJSONObject.getString("author"));
+            mMovieReviews[i].setAuthor(reviewsArrayJSONObject.getString("author"));
 
             // get id
-            Timber.v(TAG + " content :" + " " + reviewsArrayJSONObject.getString("content"));
-            reviews[i].setContent(reviewsArrayJSONObject.getString("content"));
+            //Timber.v(TAG + " content :" + " " + reviewsArrayJSONObject.getString("content"));
+            mMovieReviews[i].setContent(reviewsArrayJSONObject.getString("content"));
 
         }
-        Timber.v(TAG + " " + "JSONObject reviews size = " + reviews.length);
-        return reviews;
+        return mMovieReviews;
     }
 }
