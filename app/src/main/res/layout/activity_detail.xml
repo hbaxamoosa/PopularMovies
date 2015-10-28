@@ -1,16 +1,13 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingTop="16dp"
         tools:context="com.baxamoosa.popularmovies.DetailActivity">
 
         <TextView
@@ -27,7 +24,7 @@
             android:textStyle="bold" />
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
@@ -82,7 +79,7 @@
                     android:background="@color/primary_dark"
                     android:onClick="setFavorite"
                     android:text="@string/favorite_button"
-                    android:textColor="@color/popular_movies_blue" />
+                    android:textColor="@android:color/white" />
             </LinearLayout>
 
         </LinearLayout>
@@ -99,6 +96,29 @@
                 android:layout_height="wrap_content"
                 android:text="@string/hello_world" />
         </LinearLayout>
+        <TextView
+            android:id="@+id/trailers_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="@string/trailers_label"
+            android:textColor="@color/popular_movies_light_blue"
+            android:textSize="@dimen/abc_text_size_medium_material" />
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/fetchmoviereviewstask_trailers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ListView
+                android:id="@+id/listview_trailers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:divider="@color/popular_movies_light_blue"
+                android:dividerHeight="1dp" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/reviews_label"
@@ -112,36 +132,17 @@
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/fetchmoviereviewstask_reviews"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <ListView
                 android:id="@+id/listview_reviews"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent" />
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/trailers_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text="@string/trailers_label"
-            android:textColor="@color/popular_movies_light_blue"
-            android:textSize="@dimen/abc_text_size_medium_material" />
-
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/fetchmoviereviewstask_trailers"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <ListView
-                android:id="@+id/listview_trailers"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:divider="@color/popular_movies_light_blue"
+                android:dividerHeight="1dp" />
         </LinearLayout>
     </LinearLayout>
+
 </ScrollView>

@@ -1,9 +1,13 @@
 package network;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.baxamoosa.popularmovies.Constants;
@@ -34,7 +38,7 @@ public class FetchMovieTrailersTask extends AsyncTask<Void, Void, MovieTrailers[
     public FetchMovieTrailersTask(Context context, String movieID, View view) {
         // Timber.v(TAG + " inside FetchMovieTrailersTask constructor");
         mContext = context;
-        id = movieID;
+        id = "24428";
         rootView = view;
         // Timber.v(TAG + " id : " + id);
     }
@@ -119,7 +123,7 @@ public class FetchMovieTrailersTask extends AsyncTask<Void, Void, MovieTrailers[
     }
 
     private MovieTrailers[] getTrailersFromJson(String trailersJsonStr) throws JSONException {
-        // Timber.v(TAG + " inside getTrailersFromJson " + trailersJsonStr);
+        Timber.v(TAG + " inside getTrailersFromJson " + trailersJsonStr);
 
         final String trailersJson = "results";
         // Timber.v(TAG + " " + trailersJson);
@@ -132,35 +136,36 @@ public class FetchMovieTrailersTask extends AsyncTask<Void, Void, MovieTrailers[
 
         // Create Movie objects array
         MovieTrailers[] trailers = new MovieTrailers[trailersArray.length()];
-        // Timber.v(TAG + " " + "trailersArray.length()" + " " + trailersArray.length());
+        Timber.v(TAG + " " + "trailersArray.length()" + " " + trailersArray.length());
 
         for (int i = 0; i < trailersArray.length(); i++) {
-            // Timber.v(TAG + " i = " + i);
+            Timber.v(TAG + " i = " + i);
             // Get JSON object representing a single movie
             JSONObject trailersArrayJSONObject = trailersArray.getJSONObject(i);
 
             trailers[i] = new MovieTrailers();
             // get id
-            // Timber.v(TAG + " id :" + " " + trailersArrayJSONObject.getString("id"));
+            Timber.v(TAG + " id :" + " " + trailersArrayJSONObject.getString("id"));
             trailers[i].setId(trailersArrayJSONObject.getString("id"));
 
             // Get key
-            // Timber.v(TAG + " key :" + " " + trailersArrayJSONObject.getString("key"));
+            Timber.v(TAG + " key :" + " " + trailersArrayJSONObject.getString("key"));
             trailers[i].setKey(trailersArrayJSONObject.getString("key"));
 
             // Get name
-            // Timber.v(TAG + " name :" + " " + trailersArrayJSONObject.getString("name"));
+            Timber.v(TAG + " name :" + " " + trailersArrayJSONObject.getString("name"));
             trailers[i].setName(trailersArrayJSONObject.getString("name"));
 
             // Get site
-            // Timber.v(TAG + " site :" + " " + trailersArrayJSONObject.getString("site"));
+            Timber.v(TAG + " site :" + " " + trailersArrayJSONObject.getString("site"));
             trailers[i].setSite(trailersArrayJSONObject.getString("site"));
 
             // Get type
-            // Timber.v(TAG + " type :" + " " + trailersArrayJSONObject.getString("type"));
+            Timber.v(TAG + " type :" + " " + trailersArrayJSONObject.getString("type"));
             trailers[i].setType(trailersArrayJSONObject.getString("type"));
         }
 
+        Timber.v(TAG + " trailers array size: " + trailers.length);
         return trailers;
     }
 
@@ -170,29 +175,55 @@ public class FetchMovieTrailersTask extends AsyncTask<Void, Void, MovieTrailers[
     }
 
     @Override
-    protected void onPostExecute(MovieTrailers[] movieTrailers) {
+    protected void onPostExecute(final MovieTrailers[] movieTrailers) {
         super.onPostExecute(movieTrailers);
 
         Timber.v(TAG + " inside onPostExecute(MovieTrailers[] movieTrailers)");
         ListView trailersLV = (ListView) rootView.findViewById(R.id.listview_trailers);
-        MovieTrailersAdapter<MovieTrailers[]> movieTrailerAdapter = new MovieTrailersAdapter<MovieTrailers[]>(mContext, movieTrailers);
+        //ListView trailersLV = (ListView) rootView.findViewById(R.id.LVtrailers);
+        MovieTrailersAdapter movieTrailerAdapter = new MovieTrailersAdapter(mContext, R.layout.listview_trailers_item_row, movieTrailers);
         trailersLV.setAdapter(movieTrailerAdapter);
+        setListViewHeightBasedOnChildren(trailersLV);
 
-        /*trailersLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        trailersLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 Timber.v(TAG + " inside onItemClick(AdapterView<?> parent, View view, int position, long id)");
                 Intent trailerIntent = new Intent(Intent.ACTION_VIEW);
-                trailerIntent.setData(Uri.parse("https://www.youtube.com/watch?v=Ut3Hvbvs1bs"));
+                // trailerIntent.setData(Uri.parse("https://www.youtube.com/watch?v=Ut3Hvbvs1bs"));
+                String trailerURL = "https://www.youtube.com/watch?v=" + movieTrailers[position].getKey();
+                Timber.v(TAG + " trailerURL: " + trailerURL);
+                trailerIntent.setData(Uri.parse("https://www.youtube.com/watch?v=" + movieTrailers[position].getKey()));
                 mContext.startActivity(trailerIntent);
             }
-        });*/
+        });
     }
 
     @Override
     protected void onProgressUpdate(Void... values) {
         super.onProgressUpdate(values);
+    }
+
+    public void setListViewHeightBasedOnChildren(ListView listView) {
+        Timber.v(TAG + " inside setListViewHeightBasedOnChildren(ListView listView)");
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null) {
+            // pre-condition
+            return;
+        }
+
+        int totalHeight = 0;
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            View listItem = listAdapter.getView(i, null, listView);
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
+        }
+
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
+        listView.requestLayout();
     }
 }

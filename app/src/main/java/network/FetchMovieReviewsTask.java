@@ -4,6 +4,8 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.baxamoosa.popularmovies.Constants;
@@ -34,7 +36,7 @@ public class FetchMovieReviewsTask extends AsyncTask<Void, Void, MovieReviews[]>
     public FetchMovieReviewsTask(Context context, String movieID, View view) {
         // Timber.v(TAG + " inside FetchMovieReviewsTask constructor");
         mContext = context;
-        id = movieID;
+        id = "37724";
         rootView = view;
         // Timber.v(TAG + " id : " + id);
     }
@@ -42,15 +44,6 @@ public class FetchMovieReviewsTask extends AsyncTask<Void, Void, MovieReviews[]>
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-    }
-
-    @Override
-    protected void onPostExecute(MovieReviews[] movieReviews) {
-        super.onPostExecute(movieReviews);
-
-        ListView reviewsLV = (ListView) rootView.findViewById(R.id.listview_reviews);
-        MovieReviewsAdapter<MovieReviews[]> movieReviewAdapter = new MovieReviewsAdapter<MovieReviews[]>(mContext, movieReviews);
-        reviewsLV.setAdapter(movieReviewAdapter);
     }
 
     @Override
@@ -137,6 +130,17 @@ public class FetchMovieReviewsTask extends AsyncTask<Void, Void, MovieReviews[]>
         return null;
     }
 
+    @Override
+    protected void onPostExecute(MovieReviews[] movieReviews) {
+        super.onPostExecute(movieReviews);
+
+        Timber.v(TAG + " onPostExecute(MovieReviews[] movieReviews)");
+        ListView reviewsLV = (ListView) rootView.findViewById(R.id.listview_reviews);
+        MovieReviewsAdapter movieReviewAdapter = new MovieReviewsAdapter(mContext, R.layout.listview_reviews_item_row, movieReviews);
+        reviewsLV.setAdapter(movieReviewAdapter);
+        setListViewHeightBasedOnChildren(reviewsLV);
+    }
+
     private MovieReviews[] getReviewsFromJson(String reviewsJsonStr) throws JSONException {
         // Timber.v(TAG + " inside getReviewsFromJson " + reviewsJsonStr);
 
@@ -174,6 +178,28 @@ public class FetchMovieReviewsTask extends AsyncTask<Void, Void, MovieReviews[]>
             mMovieReviews[i].setContent(reviewsArrayJSONObject.getString("content"));
 
         }
+        Timber.v(TAG + " mMovieReviews array size: " + mMovieReviews.length);
         return mMovieReviews;
+    }
+
+    public void setListViewHeightBasedOnChildren(ListView listView) {
+        Timber.v(TAG + " inside setListViewHeightBasedOnChildren(ListView listView)");
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null) {
+            // pre-condition
+            return;
+        }
+
+        int totalHeight = 0;
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            View listItem = listAdapter.getView(i, null, listView);
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
+        }
+
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
+        listView.requestLayout();
     }
 }

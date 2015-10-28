@@ -16,7 +16,6 @@ public class Movie implements Parcelable {
         }
     };
 
-    // TODO add the "id" for the movie, to be used in retrieving the trailers and reviews
     private String id;
     private String title;
     private String thumbnail;

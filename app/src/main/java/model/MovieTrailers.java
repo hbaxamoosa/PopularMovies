@@ -2,8 +2,6 @@ package model;
 
 public class MovieTrailers {
 
-    // TODO create model for movie trailers
-
     private String id;
     private String key;
     private String name;

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.baxamoosa.popularmovies.R;
@@ -12,52 +12,57 @@ import com.baxamoosa.popularmovies.R;
 import model.MovieReviews;
 import timber.log.Timber;
 
-public class MovieReviewsAdapter<T> extends BaseAdapter {
+public class MovieReviewsAdapter extends ArrayAdapter<MovieReviews> {
 
     private final String TAG = MovieReviewsAdapter.class.getSimpleName();
     private Context mContext;
+    private int mLayoutResourceId;
     private MovieReviews[] mMovieReviews;
 
-    public MovieReviewsAdapter(Context context, MovieReviews[] movieReviews) {
-        Timber.v(TAG + " MovieReviewsAdapter constructor");
+    public MovieReviewsAdapter(Context context, int layoutResourceId, MovieReviews[] movieReviews) {
+        super(context, layoutResourceId, movieReviews);
+        // Timber.v(TAG + " MovieReviewsAdapter constructor");
         mContext = context;
+        mLayoutResourceId = layoutResourceId;
         mMovieReviews = movieReviews;
     }
 
     @Override
-    public int getCount() {
-        Timber.v(TAG + " getCount(): " + mMovieReviews.length);
-        return mMovieReviews.length;
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return position;
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // inflate the layout for each item of listView
-        LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        convertView = inflater.inflate(R.layout.listview_reviews, null);
 
-        TextView author = (TextView) convertView.findViewById(R.id.review_author);
-        TextView content = (TextView) convertView.findViewById(R.id.review_content);
+        Timber.v(TAG + " getView(int position, View convertView, ViewGroup parent)" + " position: " + position);
+
+        View row = convertView;
+        MovieReviewsHolder holder = null;
+
+        if (row == null) {
+            // inflate the layout for each item of listView
+            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            row = inflater.inflate(mLayoutResourceId, parent, false);
+
+            holder = new MovieReviewsHolder();
+
+            holder.textViewAuthor = (TextView) row.findViewById(R.id.review_author);
+            holder.textViewContent = (TextView) row.findViewById(R.id.review_content);
+            row.setTag(holder);
+        } else {
+            holder = (MovieReviewsHolder) row.getTag();
+        }
 
         if (getCount() == 0) {
             Timber.v(TAG + " getCount() == 0 is true");
-            author.setText("No reviews yet!");
-            content.setText("No reviews yet!");
+            holder.textViewAuthor.setText("No reviews yet!");
+            holder.textViewContent.setText("No reviews yet!");
         } else {
             Timber.v(TAG + " getCount() == 0 is false");
-            author.setText(mMovieReviews[position].getAuthor());
-            content.setText(mMovieReviews[position].getContent());
+            holder.textViewAuthor.setText(mMovieReviews[position].getAuthor());
+            holder.textViewContent.setText(mMovieReviews[position].getContent());
         }
-        return convertView;
+        return row;
+    }
+
+    static class MovieReviewsHolder {
+        TextView textViewAuthor;
+        TextView textViewContent;
     }
 }

@@ -2,8 +2,6 @@ package model;
 
 public class MovieReviews {
 
-    // TODO create model for movie reviews
-
     private String id;
     private String author;
     private String content;
