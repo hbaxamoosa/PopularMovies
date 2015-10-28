@@ -37,40 +37,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // testing Weather model and WeatherAdapter
-        /*setContentView(R.layout.main_listview);
-
-        Weather weather_data[] = new Weather[]
-                {
-                        new Weather(R.drawable.sample_0, "Cloudy"),
-                        new Weather(R.drawable.sample_0, "Showers"),
-                        new Weather(R.drawable.sample_0, "Snow"),
-                        new Weather(R.drawable.sample_0, "Storm"),
-                        new Weather(R.drawable.sample_0, "Sunny")
-                };
-
-        WeatherAdapter adapter = new WeatherAdapter(this, R.layout.listview_item_row, weather_data);
-
-        ListView listView1 = (ListView)findViewById(R.id.listView1);
-
-        View header = getLayoutInflater().inflate(R.layout.listview_header_row, null);
-        listView1.addHeaderView(header);
-
-        listView1.setAdapter(adapter);*/
-
-        // testing MovieTrailers model and MovieTrailersAdapter
-        /*setContentView(R.layout.main_listview);
-
-        Timber.v(TAG + " calling FetchMovieReviewsTask");
-        FetchMovieReviewsTask reviewsTask = new FetchMovieReviewsTask(this, "id", this.findViewById(android.R.id.content).getRootView());
-        reviewsTask.execute();
-
-        Timber.v(TAG + " calling FetchMovieTrailersTask");
-        FetchMovieTrailersTask trailersTask = new FetchMovieTrailersTask(this, "id", this.findViewById(android.R.id.content).getRootView());
-        trailersTask.execute();*/
-
-        // TODO apply reviews to this and test to see if it works. Most likely issue is with the dynamic ListViews not getting the right heights
-
         if (savedInstanceState != null) {
             Timber.v(TAG + " savedInstanceState != null");
             listOfMovies = (ArrayList<Movie>) savedInstanceState.get("key");

@@ -36,7 +36,7 @@ public class FetchMovieReviewsTask extends AsyncTask<Void, Void, MovieReviews[]>
     public FetchMovieReviewsTask(Context context, String movieID, View view) {
         // Timber.v(TAG + " inside FetchMovieReviewsTask constructor");
         mContext = context;
-        id = "37724";
+        id = movieID;
         rootView = view;
         // Timber.v(TAG + " id : " + id);
     }
