@@ -5,9 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.baxamoosa.popularmovies.Constants;
@@ -27,6 +25,7 @@ import java.net.URL;
 import adapter.MovieTrailersAdapter;
 import model.MovieTrailers;
 import timber.log.Timber;
+import utilities.utils;
 
 public class FetchMovieTrailersTask extends AsyncTask<Void, Void, MovieTrailers[]> {
 
@@ -183,7 +182,7 @@ public class FetchMovieTrailersTask extends AsyncTask<Void, Void, MovieTrailers[
         //ListView trailersLV = (ListView) rootView.findViewById(R.id.LVtrailers);
         MovieTrailersAdapter movieTrailerAdapter = new MovieTrailersAdapter(mContext, R.layout.listview_trailers_item_row, movieTrailers);
         trailersLV.setAdapter(movieTrailerAdapter);
-        setListViewHeightBasedOnChildren(trailersLV);
+        utils.setListViewHeightBasedOnChildren(trailersLV);
 
         trailersLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -204,26 +203,5 @@ public class FetchMovieTrailersTask extends AsyncTask<Void, Void, MovieTrailers[
     @Override
     protected void onProgressUpdate(Void... values) {
         super.onProgressUpdate(values);
-    }
-
-    public void setListViewHeightBasedOnChildren(ListView listView) {
-        Timber.v(TAG + " inside setListViewHeightBasedOnChildren(ListView listView)");
-        ListAdapter listAdapter = listView.getAdapter();
-        if (listAdapter == null) {
-            // pre-condition
-            return;
-        }
-
-        int totalHeight = 0;
-        for (int i = 0; i < listAdapter.getCount(); i++) {
-            View listItem = listAdapter.getView(i, null, listView);
-            listItem.measure(0, 0);
-            totalHeight += listItem.getMeasuredHeight();
-        }
-
-        ViewGroup.LayoutParams params = listView.getLayoutParams();
-        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-        listView.setLayoutParams(params);
-        listView.requestLayout();
     }
 }

@@ -5,11 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +19,7 @@ import timber.log.Timber;
 public class DetailActivity extends AppCompatActivity {
 
     // TODO: convert this activity into a Fragment
+    // TODO: create a tablet layout
 
     private final String TAG = DetailActivity.class.getSimpleName();
 
@@ -57,12 +55,6 @@ public class DetailActivity extends AppCompatActivity {
         release_date.setText(getIntent().getExtras().getString("release_date"));
         rating.setText((getIntent().getExtras().getString("rating")));
         synopsis.setText((getIntent().getExtras().getString("synopsis")));
-
-        ListView LV1 = (ListView) findViewById(R.id.listview_trailers);
-        setListViewHeightBasedOnChildren(LV1);
-
-        ListView LV2 = (ListView) findViewById(R.id.listview_reviews);
-        setListViewHeightBasedOnChildren(LV2);
     }
 
     public void setFavorite (View v){
@@ -91,26 +83,5 @@ public class DetailActivity extends AppCompatActivity {
             return true;
         }*/
         return super.onOptionsItemSelected(item);
-    }
-
-    public void setListViewHeightBasedOnChildren(ListView listView) {
-        Timber.v(TAG + " inside setListViewHeightBasedOnChildren(ListView listView)");
-        ListAdapter listAdapter = listView.getAdapter();
-        if (listAdapter == null) {
-            // pre-condition
-            return;
-        }
-
-        int totalHeight = 0;
-        for (int i = 0; i < listAdapter.getCount(); i++) {
-            View listItem = listAdapter.getView(i, null, listView);
-            listItem.measure(0, 0);
-            totalHeight += listItem.getMeasuredHeight();
-        }
-
-        ViewGroup.LayoutParams params = listView.getLayoutParams();
-        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-        listView.setLayoutParams(params);
-        listView.requestLayout();
     }
 }

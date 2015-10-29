@@ -4,8 +4,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.baxamoosa.popularmovies.Constants;
@@ -25,6 +23,7 @@ import java.net.URL;
 import adapter.MovieReviewsAdapter;
 import model.MovieReviews;
 import timber.log.Timber;
+import utilities.utils;
 
 public class FetchMovieReviewsTask extends AsyncTask<Void, Void, MovieReviews[]> {
 
@@ -138,7 +137,7 @@ public class FetchMovieReviewsTask extends AsyncTask<Void, Void, MovieReviews[]>
         ListView reviewsLV = (ListView) rootView.findViewById(R.id.listview_reviews);
         MovieReviewsAdapter movieReviewAdapter = new MovieReviewsAdapter(mContext, R.layout.listview_reviews_item_row, movieReviews);
         reviewsLV.setAdapter(movieReviewAdapter);
-        setListViewHeightBasedOnChildren(reviewsLV);
+        utils.setListViewHeightBasedOnChildren(reviewsLV);
     }
 
     private MovieReviews[] getReviewsFromJson(String reviewsJsonStr) throws JSONException {
@@ -180,26 +179,5 @@ public class FetchMovieReviewsTask extends AsyncTask<Void, Void, MovieReviews[]>
         }
         Timber.v(TAG + " mMovieReviews array size: " + mMovieReviews.length);
         return mMovieReviews;
-    }
-
-    public void setListViewHeightBasedOnChildren(ListView listView) {
-        Timber.v(TAG + " inside setListViewHeightBasedOnChildren(ListView listView)");
-        ListAdapter listAdapter = listView.getAdapter();
-        if (listAdapter == null) {
-            // pre-condition
-            return;
-        }
-
-        int totalHeight = 0;
-        for (int i = 0; i < listAdapter.getCount(); i++) {
-            View listItem = listAdapter.getView(i, null, listView);
-            listItem.measure(0, 0);
-            totalHeight += listItem.getMeasuredHeight();
-        }
-
-        ViewGroup.LayoutParams params = listView.getLayoutParams();
-        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-        listView.setLayoutParams(params);
-        listView.requestLayout();
     }
 }

@@ -20,7 +20,6 @@ import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity {
 
-
     private final String TAG = MainActivity.class.getSimpleName();
     private ArrayList<Movie> listOfMovies;
     private String mSortBy;
