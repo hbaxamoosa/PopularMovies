@@ -10,7 +10,6 @@ import android.widget.TextView;
 import com.baxamoosa.popularmovies.R;
 
 import model.MovieReviews;
-import timber.log.Timber;
 
 public class MovieReviewsAdapter extends ArrayAdapter<MovieReviews> {
 
@@ -30,7 +29,7 @@ public class MovieReviewsAdapter extends ArrayAdapter<MovieReviews> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        Timber.v(TAG + " getView(int position, View convertView, ViewGroup parent)" + " position: " + position);
+        //Timber.v(TAG + " getView(int position, View convertView, ViewGroup parent)" + " position: " + position);
 
         View row = convertView;
         MovieReviewsHolder holder = null;
@@ -40,21 +39,18 @@ public class MovieReviewsAdapter extends ArrayAdapter<MovieReviews> {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             row = inflater.inflate(mLayoutResourceId, parent, false);
 
-            holder = new MovieReviewsHolder();
-
-            holder.textViewAuthor = (TextView) row.findViewById(R.id.review_author);
-            holder.textViewContent = (TextView) row.findViewById(R.id.review_content);
+            holder = new MovieReviewsHolder(row);
             row.setTag(holder);
         } else {
             holder = (MovieReviewsHolder) row.getTag();
         }
 
         if (getCount() == 0) {
-            Timber.v(TAG + " getCount() == 0 is true");
+            // Timber.v(TAG + " getCount() == 0 is true");
             holder.textViewAuthor.setText("No reviews yet!");
             holder.textViewContent.setText("No reviews yet!");
         } else {
-            Timber.v(TAG + " getCount() == 0 is false");
+            // Timber.v(TAG + " getCount() == 0 is false");
             holder.textViewAuthor.setText(mMovieReviews[position].getAuthor());
             holder.textViewContent.setText(mMovieReviews[position].getContent());
         }
@@ -64,5 +60,10 @@ public class MovieReviewsAdapter extends ArrayAdapter<MovieReviews> {
     static class MovieReviewsHolder {
         TextView textViewAuthor;
         TextView textViewContent;
+
+        public MovieReviewsHolder(View view) {
+            textViewAuthor = (TextView) view.findViewById(R.id.review_author);
+            textViewContent = (TextView) view.findViewById(R.id.review_content);
+        }
     }
 }

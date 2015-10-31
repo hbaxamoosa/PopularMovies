@@ -65,7 +65,7 @@ public class FetchMovieTrailersTask extends AsyncTask<Void, Void, MovieTrailers[
 
             URL url = new URL(builtUri.toString());
 
-            Timber.v(TAG + "Built URI " + builtUri.toString());
+            // Timber.v(TAG + "Built URI " + builtUri.toString());
 
             // Create the request to OpenWeatherMap, and open the connection
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -122,7 +122,7 @@ public class FetchMovieTrailersTask extends AsyncTask<Void, Void, MovieTrailers[
     }
 
     private MovieTrailers[] getTrailersFromJson(String trailersJsonStr) throws JSONException {
-        Timber.v(TAG + " inside getTrailersFromJson " + trailersJsonStr);
+        // Timber.v(TAG + " inside getTrailersFromJson " + trailersJsonStr);
 
         final String trailersJson = "results";
         // Timber.v(TAG + " " + trailersJson);
@@ -135,7 +135,7 @@ public class FetchMovieTrailersTask extends AsyncTask<Void, Void, MovieTrailers[
 
         // Create Movie objects array
         MovieTrailers[] trailers = new MovieTrailers[trailersArray.length()];
-        Timber.v(TAG + " " + "trailersArray.length()" + " " + trailersArray.length());
+        // Timber.v(TAG + " " + "trailersArray.length()" + " " + trailersArray.length());
 
         for (int i = 0; i < trailersArray.length(); i++) {
             Timber.v(TAG + " i = " + i);
@@ -144,23 +144,23 @@ public class FetchMovieTrailersTask extends AsyncTask<Void, Void, MovieTrailers[
 
             trailers[i] = new MovieTrailers();
             // get id
-            Timber.v(TAG + " id :" + " " + trailersArrayJSONObject.getString("id"));
+            // Timber.v(TAG + " id :" + " " + trailersArrayJSONObject.getString("id"));
             trailers[i].setId(trailersArrayJSONObject.getString("id"));
 
             // Get key
-            Timber.v(TAG + " key :" + " " + trailersArrayJSONObject.getString("key"));
+            // Timber.v(TAG + " key :" + " " + trailersArrayJSONObject.getString("key"));
             trailers[i].setKey(trailersArrayJSONObject.getString("key"));
 
             // Get name
-            Timber.v(TAG + " name :" + " " + trailersArrayJSONObject.getString("name"));
+            // Timber.v(TAG + " name :" + " " + trailersArrayJSONObject.getString("name"));
             trailers[i].setName(trailersArrayJSONObject.getString("name"));
 
             // Get site
-            Timber.v(TAG + " site :" + " " + trailersArrayJSONObject.getString("site"));
+            // Timber.v(TAG + " site :" + " " + trailersArrayJSONObject.getString("site"));
             trailers[i].setSite(trailersArrayJSONObject.getString("site"));
 
             // Get type
-            Timber.v(TAG + " type :" + " " + trailersArrayJSONObject.getString("type"));
+            // Timber.v(TAG + " type :" + " " + trailersArrayJSONObject.getString("type"));
             trailers[i].setType(trailersArrayJSONObject.getString("type"));
         }
 
@@ -177,7 +177,7 @@ public class FetchMovieTrailersTask extends AsyncTask<Void, Void, MovieTrailers[
     protected void onPostExecute(final MovieTrailers[] movieTrailers) {
         super.onPostExecute(movieTrailers);
 
-        Timber.v(TAG + " inside onPostExecute(MovieTrailers[] movieTrailers)");
+        // Timber.v(TAG + " inside onPostExecute(MovieTrailers[] movieTrailers)");
         ListView trailersLV = (ListView) rootView.findViewById(R.id.listview_trailers);
         //ListView trailersLV = (ListView) rootView.findViewById(R.id.LVtrailers);
         MovieTrailersAdapter movieTrailerAdapter = new MovieTrailersAdapter(mContext, R.layout.listview_trailers_item_row, movieTrailers);
@@ -189,11 +189,11 @@ public class FetchMovieTrailersTask extends AsyncTask<Void, Void, MovieTrailers[
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Timber.v(TAG + " inside onItemClick(AdapterView<?> parent, View view, int position, long id)");
+                // Timber.v(TAG + " inside onItemClick(AdapterView<?> parent, View view, int position, long id)");
                 Intent trailerIntent = new Intent(Intent.ACTION_VIEW);
                 // trailerIntent.setData(Uri.parse("https://www.youtube.com/watch?v=Ut3Hvbvs1bs"));
                 String trailerURL = "https://www.youtube.com/watch?v=" + movieTrailers[position].getKey();
-                Timber.v(TAG + " trailerURL: " + trailerURL);
+                // Timber.v(TAG + " trailerURL: " + trailerURL);
                 trailerIntent.setData(Uri.parse("https://www.youtube.com/watch?v=" + movieTrailers[position].getKey()));
                 mContext.startActivity(trailerIntent);
             }

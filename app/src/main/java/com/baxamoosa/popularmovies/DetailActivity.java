@@ -14,7 +14,6 @@ import com.squareup.picasso.Picasso;
 
 import network.FetchMovieReviewsTask;
 import network.FetchMovieTrailersTask;
-import timber.log.Timber;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -27,9 +26,7 @@ public class DetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-        Timber.v(TAG + " " + "Activity Created");
-
-        Timber.v(TAG + " id : " + getIntent().getExtras().getString("id"));
+        // Timber.v(TAG + " " + "Activity Created");
 
         ImageView poster_thumbnail = (ImageView) findViewById(R.id.poster_thumbnail);
         TextView title = (TextView) findViewById(R.id.title);

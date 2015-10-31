@@ -5,12 +5,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.baxamoosa.popularmovies.R;
 
 import model.MovieTrailers;
-import timber.log.Timber;
 
 public class MovieTrailersAdapter extends ArrayAdapter<MovieTrailers> {
 
@@ -23,7 +23,7 @@ public class MovieTrailersAdapter extends ArrayAdapter<MovieTrailers> {
 
     public MovieTrailersAdapter(Context context, int layoutResourceId, MovieTrailers[] movieTrailers) {
         super(context, layoutResourceId, movieTrailers);
-        Timber.v(TAG + " MovieTrailersAdapter constructor");
+        // Timber.v(TAG + " MovieTrailersAdapter constructor");
         mContext = context;
         mLayoutResourceId = layoutResourceId;
         mMovieTrailers = movieTrailers;
@@ -32,7 +32,7 @@ public class MovieTrailersAdapter extends ArrayAdapter<MovieTrailers> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        Timber.v(TAG + " getView(int position, View convertView, ViewGroup parent)" + " position: " + position);
+        // Timber.v(TAG + " getView(int position, View convertView, ViewGroup parent)" + " position: " + position);
 
         View row = convertView;
         MovieTrailersHolder holder = null;
@@ -42,24 +42,26 @@ public class MovieTrailersAdapter extends ArrayAdapter<MovieTrailers> {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             row = inflater.inflate(mLayoutResourceId, parent, false);
 
-            holder = new MovieTrailersHolder();
-            holder.textView = (TextView) row.findViewById(R.id.trailer_name);
-
+            holder = new MovieTrailersHolder(row);
             row.setTag(holder);
         } else {
             holder = (MovieTrailersHolder) row.getTag();
         }
 
-        //ImageView thumbnail = (ImageView) convertView.findViewById(R.id.trailer_image);
-
-        Timber.v(TAG + " mMovieTrailers[position].getName(): " + mMovieTrailers[position].getName());
         holder.textView.setText(mMovieTrailers[position].getName());
-        //thumbnail.setImageBitmap("http://img.youtube.com/vi/Ut3Hvbvs1bs/0.jpg");
-
+        // Timber.v(TAG + " mMovieTrailers[position].getKey(): " + mMovieTrailers[position].getKey());
+        // String thumbnail = YOUTUBE_IMAGE_URL_PREFIX + mMovieTrailers[position].getKey() + YOUTUBE_IMAGE_URL_SUFFIX;
+        // holder.imageView.setImageURI(Uri.parse(thumbnail));
         return row;
     }
 
     static class MovieTrailersHolder {
         TextView textView;
+        ImageView imageView;
+
+        public MovieTrailersHolder(View view) {
+            textView = (TextView) view.findViewById(R.id.trailer_name);
+            imageView = (ImageView) view.findViewById(R.id.trailer_image);
+        }
     }
 }

@@ -73,7 +73,7 @@ public class FetchMovieReviewsTask extends AsyncTask<Void, Void, MovieReviews[]>
 
             URL url = new URL(builtUri.toString());
 
-            Timber.v(TAG + "Built URI " + builtUri.toString());
+            // Timber.v(TAG + "Built URI " + builtUri.toString());
 
             // Create the request to OpenWeatherMap, and open the connection
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -133,7 +133,7 @@ public class FetchMovieReviewsTask extends AsyncTask<Void, Void, MovieReviews[]>
     protected void onPostExecute(MovieReviews[] movieReviews) {
         super.onPostExecute(movieReviews);
 
-        Timber.v(TAG + " onPostExecute(MovieReviews[] movieReviews)");
+        // Timber.v(TAG + " onPostExecute(MovieReviews[] movieReviews)");
         ListView reviewsLV = (ListView) rootView.findViewById(R.id.listview_reviews);
         MovieReviewsAdapter movieReviewAdapter = new MovieReviewsAdapter(mContext, R.layout.listview_reviews_item_row, movieReviews);
         reviewsLV.setAdapter(movieReviewAdapter);
@@ -177,7 +177,7 @@ public class FetchMovieReviewsTask extends AsyncTask<Void, Void, MovieReviews[]>
             mMovieReviews[i].setContent(reviewsArrayJSONObject.getString("content"));
 
         }
-        Timber.v(TAG + " mMovieReviews array size: " + mMovieReviews.length);
+        // Timber.v(TAG + " mMovieReviews array size: " + mMovieReviews.length);
         return mMovieReviews;
     }
 }
