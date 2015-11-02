@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.baxamoosa.popularmovies.Constants;
+import com.baxamoosa.popularmovies.MainActivity;
 import com.baxamoosa.popularmovies.PopularMovies;
 import com.baxamoosa.popularmovies.R;
 
@@ -75,16 +76,17 @@ public class FetchMoviesTask extends AsyncTask<Void, Void, Movie[]> {
         mRecyclerView.setHasFixedSize(true);
 
         // check to see if the phone is in portrait or landscape
-        switch (context.getResources().getConfiguration().orientation) {
-            case Configuration.ORIENTATION_PORTRAIT:
-                //Toast.makeText(this.context, "screen is in portrait", Toast.LENGTH_LONG).show();
-                mLayoutManager = new GridLayoutManager(PopularMovies.getAppContext(), 2);
-                break;
-            case Configuration.ORIENTATION_LANDSCAPE:
-                //Toast.makeText(this.context, "screen is in landscape", Toast.LENGTH_LONG).show();
-                mLayoutManager = new GridLayoutManager(PopularMovies.getAppContext(), 4);
-                break;
+        if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT && MainActivity.mTwoPane == false) {
+            // portrait on phone
+            mLayoutManager = new GridLayoutManager(PopularMovies.getAppContext(), 2);
+        } else if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE && MainActivity.mTwoPane == false) {
+            // landscape on phone
+            mLayoutManager = new GridLayoutManager(PopularMovies.getAppContext(), 4);
+        } else if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE && MainActivity.mTwoPane == true) {
+            // landscape on tablet
+            mLayoutManager = new GridLayoutManager(PopularMovies.getAppContext(), 2);
         }
+
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mAdapter = new MovieAdapter(movies);

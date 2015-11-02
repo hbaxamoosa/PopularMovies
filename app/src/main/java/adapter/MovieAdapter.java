@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.baxamoosa.popularmovies.DetailActivity;
+import com.baxamoosa.popularmovies.MainActivity;
 import com.baxamoosa.popularmovies.R;
 import com.squareup.picasso.Picasso;
 
@@ -63,17 +64,20 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
         public void onClick(View v) {
             int position = getLayoutPosition();
             Context context = itemView.getContext();
-            // Timber.v(TAG + " inside onClick(View v)");
 
-            Intent intent = new Intent(context, DetailActivity.class);
-            intent.putExtra("id", mMovies[position].getId());
-            intent.putExtra("title", mMovies[position].getTitle());
-            intent.putExtra("poster_thumbnail", mMovies[position].getThumbnail());
-            intent.putExtra("release_date", mMovies[position].getDate());
-            intent.putExtra("rating", mMovies[position].getRating());
-            intent.putExtra("synopsis", mMovies[position].getSynopsis());
+            if (MainActivity.mTwoPane == true) {
+                // do nothing
+            } else {
+                Intent intent = new Intent(context, DetailActivity.class);
+                intent.putExtra("id", mMovies[position].getId());
+                intent.putExtra("title", mMovies[position].getTitle());
+                intent.putExtra("poster_thumbnail", mMovies[position].getThumbnail());
+                intent.putExtra("release_date", mMovies[position].getDate());
+                intent.putExtra("rating", mMovies[position].getRating());
+                intent.putExtra("synopsis", mMovies[position].getSynopsis());
 
-            context.startActivity(intent);
+                context.startActivity(intent);
+            }
         }
     }
 }

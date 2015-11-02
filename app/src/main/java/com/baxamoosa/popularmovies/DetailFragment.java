@@ -1,7 +1,6 @@
 package com.baxamoosa.popularmovies;
 
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +12,6 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
-import model.Movie;
 import network.FetchMovieReviewsTask;
 import network.FetchMovieTrailersTask;
 import timber.log.Timber;
@@ -21,16 +19,24 @@ import timber.log.Timber;
 public class DetailFragment extends Fragment {
 
     private final String TAG = DetailFragment.class.getSimpleName();
-    private Movie mMovie;
+    // private Movie mMovie;
+    private OnItemClickedListener mOnItemClickedListener;
 
     public DetailFragment() {
-        Timber.v(TAG + " inside DetailFragment constructor");
+        // Timber.v(TAG + " inside DetailFragment constructor");
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Activity activity = getActivity();
+        /*Activity activity = this.getActivity();
+        CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
+        Timber.v(TAG + " getActivity().getIntent().getExtras().getString(\"title\") " + activity.getIntent().getExtras().getString("title"));
+        if (appBarLayout != null) {
+            appBarLayout.setTitle(getActivity().getIntent().getExtras().getString("title"));
+        } else {
+            Timber.v(TAG + " appBarLayout = null");
+        }*/
     }
 
     @Override
@@ -47,14 +53,6 @@ public class DetailFragment extends Fragment {
         TextView synopsis = (TextView) rootView.findViewById(R.id.synopsis);
         Button favorite = (Button) rootView.findViewById(R.id.btn_favorite);
         // favorite button is for adding/removing favorites
-
-        CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) rootView.findViewById(R.id.toolbar_layout);
-        Timber.v(TAG + " getActivity().getIntent().getExtras().getString(\"title\") " + getActivity().getIntent().getExtras().getString("title"));
-        if (appBarLayout != null) {
-            appBarLayout.setTitle(getActivity().getIntent().getExtras().getString("title"));
-        } else {
-            Timber.v(TAG + " appBarLayout = null");
-        }
 
         if (getActivity().getIntent().getExtras() != null) {
             Timber.v(TAG + " getActivity().getIntent().getExtras() != null");
@@ -82,6 +80,13 @@ public class DetailFragment extends Fragment {
         // TODO: implement DB actions to store favorites. If the movie is not in favorties, add.
         // If the movie is already in favorites, allow the user the option to remove from favorites
 
+    }
+
+    public void setActivateOnItemClick(boolean b) {
+    }
+
+    public interface OnItemClickedListener {
+        void OnItemClicked(String id);
     }
 }
 

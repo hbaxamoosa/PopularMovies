@@ -22,8 +22,13 @@ import model.Movie;
 import network.FetchMoviesTask;
 import timber.log.Timber;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements DetailFragment.OnItemClickedListener {
 
+    /**
+     * Whether or not the activity is in two-pane mode, i.e. running on a tablet
+     * device.
+     */
+    public static boolean mTwoPane;
     private final String TAG = MainActivity.class.getSimpleName();
     private ArrayList<Movie> listOfMovies;
     private String mSortBy;
@@ -61,24 +66,27 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Timber.v(TAG + " Activity Created");
+        if (findViewById(R.id.frameLayout) != null) {
+            // The detail container view will be present only in the
+            // large-screen layouts (res/values-large and
+            // res/values-sw600dp). If this view is present, then the
+            // activity should be in two-pane mode.
+            mTwoPane = true;
+            ConnectivityManager cm =
+                    (ConnectivityManager) PopularMovies.getAppContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        ConnectivityManager cm =
-                (ConnectivityManager) PopularMovies.getAppContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+            boolean isConnected = activeNetwork != null &&
+                    activeNetwork.isConnectedOrConnecting();
 
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        boolean isConnected = activeNetwork != null &&
-                activeNetwork.isConnectedOrConnecting();
-
-        Timber.v(TAG + " isConnected: " + isConnected);
-
-        if (isConnected) {
-            Timber.v(TAG + " (inside if) isConnected: " + isConnected);
-            FetchMoviesTask moviesTask = new FetchMoviesTask(MainActivity.this, this.findViewById(android.R.id.content).getRootView());
-            moviesTask.execute();
-        } else {
-            Timber.v(TAG + " (inside else) isConnected: " + isConnected);
-            Toast.makeText(this, "No network connection.", Toast.LENGTH_LONG).show();
+            if (isConnected) {
+                // Timber.v(TAG + " (inside if) isConnected: " + isConnected);
+                FetchMoviesTask moviesTask = new FetchMoviesTask(MainActivity.this, this.findViewById(android.R.id.content).getRootView());
+                moviesTask.execute();
+            } else {
+                // Timber.v(TAG + " (inside else) isConnected: " + isConnected);
+                Toast.makeText(this, "No network connection.", Toast.LENGTH_LONG).show();
+            }
         }
     }
 
@@ -121,5 +129,30 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void OnItemClicked(String id) {
+        if (mTwoPane) {
+            // In two-pane mode, show the detail view in this activity by
+            // adding or replacing the detail fragment using a
+            // fragment transaction.
+            Timber.v(TAG + " mTwoPane is " + mTwoPane);
+            // getSupportFragmentManager().beginTransaction().replace(R.id.fragment_detail_container, new DetailFragment()).commit();
+
+            Intent intent = new Intent(this, DetailActivity.class);
+            intent.putExtra("id", "24428");
+            intent.putExtra("title", "my title");
+            intent.putExtra("poster_thumbnail", "/jjBgi2r5cRt36xF6iNUEhzscEcb.jpg");
+            intent.putExtra("release_date", "2012");
+            intent.putExtra("rating", "10");
+            intent.putExtra("synopsis", "some test here. some test here. some test here. ");
+
+            this.startActivity(intent);
+        } else {
+            // In single-pane mode, simply start the detail activity
+            // for the selected item ID.
+            Timber.v(TAG + " mTwoPane is " + mTwoPane);
+        }
     }
 }
