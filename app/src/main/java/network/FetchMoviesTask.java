@@ -150,7 +150,7 @@ public class FetchMoviesTask extends AsyncTask<Void, Void, Movie[]> {
                 return null;
             }
             moviesJsonStr = buffer.toString();
-            Timber.v(TAG + moviesJsonStr);
+            // Timber.v(TAG + moviesJsonStr);
         } catch (IOException e) {
             Timber.e(TAG + " Error " + e);
             return null;
