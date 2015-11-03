@@ -1,6 +1,8 @@
 package com.baxamoosa.popularmovies;
 
+import android.app.Activity;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,24 +21,20 @@ import timber.log.Timber;
 public class DetailFragment extends Fragment {
 
     private final String TAG = DetailFragment.class.getSimpleName();
-    // private Movie mMovie;
-    private OnItemClickedListener mOnItemClickedListener;
 
-    public DetailFragment() {
-        // Timber.v(TAG + " inside DetailFragment constructor");
-    }
+    public DetailFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        /*Activity activity = this.getActivity();
+        Activity activity = this.getActivity();
         CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
         Timber.v(TAG + " getActivity().getIntent().getExtras().getString(\"title\") " + activity.getIntent().getExtras().getString("title"));
         if (appBarLayout != null) {
             appBarLayout.setTitle(getActivity().getIntent().getExtras().getString("title"));
         } else {
             Timber.v(TAG + " appBarLayout = null");
-        }*/
+        }
     }
 
     @Override
@@ -80,13 +78,6 @@ public class DetailFragment extends Fragment {
         // TODO: implement DB actions to store favorites. If the movie is not in favorties, add.
         // If the movie is already in favorites, allow the user the option to remove from favorites
 
-    }
-
-    public void setActivateOnItemClick(boolean b) {
-    }
-
-    public interface OnItemClickedListener {
-        void OnItemClicked(String id);
     }
 }
 

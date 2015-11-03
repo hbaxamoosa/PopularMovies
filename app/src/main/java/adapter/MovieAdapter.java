@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.baxamoosa.popularmovies.DetailActivity;
 import com.baxamoosa.popularmovies.MainActivity;
@@ -14,11 +15,14 @@ import com.baxamoosa.popularmovies.R;
 import com.squareup.picasso.Picasso;
 
 import model.Movie;
+import timber.log.Timber;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapterViewHolder> {
 
     private final String TAG = MovieAdapter.class.getSimpleName();
     private Movie[] mMovies;
+
+    public MovieAdapter(){}
 
     public MovieAdapter(Movie[] movies) {
         mMovies = movies;
@@ -26,14 +30,14 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
     @Override
     public MovieAdapter.MovieAdapterViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        // Timber.v(TAG + " inside onCreateViewHolder");
+        Timber.v(TAG + " inside onCreateViewHolder");
         View itemView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.adapter_movieadapter, viewGroup, false);
         return new MovieAdapterViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(MovieAdapter.MovieAdapterViewHolder movieAdapterViewHolder, int i) {
-        // Timber.v(TAG + " inside onBindViewHolder");
+        Timber.v(TAG + " inside onBindViewHolder");
         String thumbnail = mMovies[i].getThumbnail();
         // Timber.v(TAG + " thumbnail = " + thumbnail);
 
@@ -44,7 +48,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
     @Override
     public int getItemCount() {
-        //Log.v(TAG, "mMovies.length = " + mMovies.length);
+        // Timber.v(TAG + " mMovies.length = " + mMovies.length);
         return (null != mMovies ? mMovies.length : 0);
     }
 
@@ -64,10 +68,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
         public void onClick(View v) {
             int position = getLayoutPosition();
             Context context = itemView.getContext();
+            Toast.makeText(context, "position: " + position, Toast.LENGTH_SHORT).show();
 
             if (MainActivity.mTwoPane == true) {
-                // do nothing
+                // launch as fragment
             } else {
+                // launch as activity
                 Intent intent = new Intent(context, DetailActivity.class);
                 intent.putExtra("id", mMovies[position].getId());
                 intent.putExtra("title", mMovies[position].getTitle());

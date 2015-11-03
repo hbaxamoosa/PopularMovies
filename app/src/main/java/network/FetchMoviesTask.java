@@ -1,19 +1,14 @@
 package network;
 
-import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.baxamoosa.popularmovies.Constants;
-import com.baxamoosa.popularmovies.MainActivity;
 import com.baxamoosa.popularmovies.PopularMovies;
 import com.baxamoosa.popularmovies.R;
 
@@ -32,28 +27,27 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import adapter.MovieAdapter;
+import fragments.MoviesActivity;
 import model.Movie;
 import timber.log.Timber;
 
 public class FetchMoviesTask extends AsyncTask<Void, Void, Movie[]> {
 
     private final String TAG = FetchMoviesTask.class.getSimpleName();
-    private Context context;
     private View rootView;
     private String sort;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
-    public FetchMoviesTask(Context c, View v) {
-        context = c;
-        rootView = v;
+
+    public FetchMoviesTask() {
     }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        //Timber.v(TAG + " inside onPreExecute");
+        Timber.v(TAG + " inside onPreExecute");
 
         Resources res = PopularMovies.getAppContext().getResources();
 
@@ -61,7 +55,7 @@ public class FetchMoviesTask extends AsyncTask<Void, Void, Movie[]> {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(PopularMovies.getAppContext());
         String sort_type = sharedPref.getString(res.getString(R.string.prefs_sorting_key), res.getString(R.string.prefs_sorting_default));
 
-        // Timber.v(TAG + " sort_type = " + sort_type);
+        Timber.v(TAG + " sort_type = " + sort_type);
         if (sort_type.equals(res.getString(R.string.most_popular))) {
             sort = "popularity.desc";
         } else if (sort_type.equals(res.getString(R.string.highest_rated))) {
@@ -72,25 +66,9 @@ public class FetchMoviesTask extends AsyncTask<Void, Void, Movie[]> {
     @Override
     protected void onPostExecute(Movie[] movies) {
         super.onPostExecute(movies);
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
-        mRecyclerView.setHasFixedSize(true);
-
-        // check to see if the phone is in portrait or landscape
-        if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT && MainActivity.mTwoPane == false) {
-            // portrait on phone
-            mLayoutManager = new GridLayoutManager(PopularMovies.getAppContext(), 2);
-        } else if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE && MainActivity.mTwoPane == false) {
-            // landscape on phone
-            mLayoutManager = new GridLayoutManager(PopularMovies.getAppContext(), 4);
-        } else if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE && MainActivity.mTwoPane == true) {
-            // landscape on tablet
-            mLayoutManager = new GridLayoutManager(PopularMovies.getAppContext(), 2);
-        }
-
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        Timber.v(TAG + " inside onPostExecute(Movie[] movies)");
         mAdapter = new MovieAdapter(movies);
-        mRecyclerView.setAdapter(mAdapter);
+        MoviesActivity.mRecyclerView.setAdapter(mAdapter);
     }
 
     @Override
@@ -100,7 +78,7 @@ public class FetchMoviesTask extends AsyncTask<Void, Void, Movie[]> {
 
     @Override
     protected Movie[] doInBackground(Void... params) {
-        // Timber.v(TAG + " inside doInBackground");
+        Timber.v(TAG + " inside doInBackground");
 
         // These two need to be declared outside the try/catch
         // so that they can be closed in the finally block.
@@ -152,7 +130,7 @@ public class FetchMoviesTask extends AsyncTask<Void, Void, Movie[]> {
                 return null;
             }
             moviesJsonStr = buffer.toString();
-            // Timber.v(TAG + moviesJsonStr);
+            Timber.v(TAG + moviesJsonStr);
         } catch (IOException e) {
             Timber.e(TAG + " Error " + e);
             return null;
@@ -187,7 +165,7 @@ public class FetchMoviesTask extends AsyncTask<Void, Void, Movie[]> {
         // Create JSONArray from JSONObject
         JSONArray moviesArray = moviesJsonObj.getJSONArray(moviesJson);
 
-        // Timber.v(TAG + " JSONObject movie size = " + moviesArray.length());
+        Timber.v(TAG + " JSONObject movie size = " + moviesArray.length());
 
         // Create Movie objects array
         Movie[] movies = new Movie[moviesArray.length()];
