@@ -48,7 +48,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
     @Override
     public int getItemCount() {
-        // Timber.v(TAG + " mMovies.length = " + mMovies.length);
         return (null != mMovies ? mMovies.length : 0);
     }
 

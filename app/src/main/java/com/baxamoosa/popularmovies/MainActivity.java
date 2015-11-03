@@ -1,10 +1,7 @@
 package com.baxamoosa.popularmovies;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -14,7 +11,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -74,19 +70,7 @@ public class MainActivity extends AppCompatActivity {
         // res/values-sw600dp). If this view is present, then the
         // activity should be in two-pane mode.
         mTwoPane = true;
-        ConnectivityManager cm =
-                (ConnectivityManager) PopularMovies.getAppContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        boolean isConnected = activeNetwork != null &&
-                activeNetwork.isConnectedOrConnecting();
-
-        if (isConnected) {
-            // do something
-        } else {
-            // Timber.v(TAG + " (inside else) isConnected: " + isConnected);
-            Toast.makeText(this, "No network connection.", Toast.LENGTH_LONG).show();
-        }
     }
 
     @Override

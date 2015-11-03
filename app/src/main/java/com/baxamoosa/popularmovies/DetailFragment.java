@@ -53,7 +53,7 @@ public class DetailFragment extends Fragment {
         // favorite button is for adding/removing favorites
 
         if (getActivity().getIntent().getExtras() != null) {
-            Timber.v(TAG + " getActivity().getIntent().getExtras() != null");
+            // Timber.v(TAG + " getActivity().getIntent().getExtras() != null");
             // Use the id to get the trailers
             FetchMovieTrailersTask trailersTask = new FetchMovieTrailersTask(getContext(), getActivity().getIntent().getExtras().getString("id"), rootView);
             trailersTask.execute();
@@ -69,7 +69,7 @@ public class DetailFragment extends Fragment {
             rating.setText(getActivity().getIntent().getExtras().getString("rating"));
             synopsis.setText(getActivity().getIntent().getExtras().getString("synopsis"));
         }
-        Timber.v(TAG + " returning rootView");
+        // Timber.v(TAG + " returning rootView");
         return rootView;
     }
 

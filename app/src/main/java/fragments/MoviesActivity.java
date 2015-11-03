@@ -12,12 +12,14 @@ import android.view.ViewGroup;
 import com.baxamoosa.popularmovies.PopularMovies;
 import com.baxamoosa.popularmovies.R;
 
+import java.util.ArrayList;
+
 import adapter.MovieAdapter;
 import model.Movie;
 import network.FetchMoviesTask;
 import timber.log.Timber;
 
-public class MoviesActivity extends android.support.v4.app.Fragment implements android.support.v4.app.LoaderManager.LoaderCallbacks<Object> {
+public class MoviesActivity extends android.support.v4.app.Fragment {
 
     public static Movie[] mMovies;
     public static RecyclerView mRecyclerView;
@@ -30,6 +32,8 @@ public class MoviesActivity extends android.support.v4.app.Fragment implements a
     private final String TAG = MoviesActivity.class.getSimpleName();
     OnItemClickedListener mListener = sDummyCallbacks;
     private RecyclerView.LayoutManager mLayoutManager;
+    private ArrayList<Movie> listOfMovies;
+    private String mSortBy;
 
     public MoviesActivity() {
     }
@@ -50,16 +54,9 @@ public class MoviesActivity extends android.support.v4.app.Fragment implements a
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
         mLayoutManager = new GridLayoutManager(PopularMovies.getAppContext(), 2);
         mRecyclerView.setLayoutManager(mLayoutManager);
-
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        /*Button button = (Button) rootView.findViewById(R.id.button1);
-        button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                mListener.OnItemClicked("1");
-            }
-        });*/
         return rootView;
     }
 
@@ -68,8 +65,6 @@ public class MoviesActivity extends android.support.v4.app.Fragment implements a
         super.onActivityCreated(savedInstanceState);
         mAdapter = new MovieAdapter(mMovies);
         mRecyclerView.setAdapter(mAdapter);
-
-        // getLoaderManager().initLoader(0, null, this);
     }
 
     @Override
@@ -80,21 +75,6 @@ public class MoviesActivity extends android.support.v4.app.Fragment implements a
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement OnItemClickedListener");
         }
-    }
-
-    @Override
-    public android.support.v4.content.Loader<Object> onCreateLoader(int id, Bundle args) {
-        return null;
-    }
-
-    @Override
-    public void onLoadFinished(android.support.v4.content.Loader<Object> loader, Object data) {
-
-    }
-
-    @Override
-    public void onLoaderReset(android.support.v4.content.Loader<Object> loader) {
-
     }
 
     // Put this interface on the Fragment or the View

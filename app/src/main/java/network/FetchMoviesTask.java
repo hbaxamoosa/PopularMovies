@@ -101,9 +101,8 @@ public class FetchMoviesTask extends AsyncTask<Void, Void, Movie[]> {
 
             URL url = new URL(builtUri.toString());
 
-            // Timber.v(TAG + " Built URI " + builtUri.toString());
+            Timber.v(TAG + " Built URI " + builtUri.toString());
 
-            // Create the request to OpenWeatherMap, and open the connection
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();
