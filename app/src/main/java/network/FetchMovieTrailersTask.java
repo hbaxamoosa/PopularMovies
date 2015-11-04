@@ -164,7 +164,7 @@ public class FetchMovieTrailersTask extends AsyncTask<Void, Void, MovieTrailers[
             trailers[i].setType(trailersArrayJSONObject.getString("type"));
         }
 
-        Timber.v(TAG + " trailers array size: " + trailers.length);
+        // Timber.v(TAG + " trailers array size: " + trailers.length);
         return trailers;
     }
 

@@ -48,8 +48,9 @@ public class MoviesActivity extends android.support.v4.app.Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Timber.v(TAG + " inside onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)");
+        // Timber.v(TAG + " inside onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)");
 
+        Timber.v(TAG + "popularmovies.MoviesActivity.mTwoPane is " + com.baxamoosa.popularmovies.MoviesActivity.mTwoPane);
         View rootView = inflater.inflate(R.layout.activity_main, container, false);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
         mLayoutManager = new GridLayoutManager(PopularMovies.getAppContext(), 2);

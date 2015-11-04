@@ -10,12 +10,11 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.baxamoosa.popularmovies.DetailActivity;
-import com.baxamoosa.popularmovies.MainActivity;
+import com.baxamoosa.popularmovies.MoviesActivity;
 import com.baxamoosa.popularmovies.R;
 import com.squareup.picasso.Picasso;
 
 import model.Movie;
-import timber.log.Timber;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapterViewHolder> {
 
@@ -30,14 +29,14 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
     @Override
     public MovieAdapter.MovieAdapterViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        Timber.v(TAG + " inside onCreateViewHolder");
+        // Timber.v(TAG + " inside onCreateViewHolder");
         View itemView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.adapter_movieadapter, viewGroup, false);
         return new MovieAdapterViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(MovieAdapter.MovieAdapterViewHolder movieAdapterViewHolder, int i) {
-        Timber.v(TAG + " inside onBindViewHolder");
+        // Timber.v(TAG + " inside onBindViewHolder");
         String thumbnail = mMovies[i].getThumbnail();
         // Timber.v(TAG + " thumbnail = " + thumbnail);
 
@@ -59,8 +58,34 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
             super(itemView);
 
             // Timber.v(TAG + " inside MovieAdapterViewHolder(View itemView)");
+            Context context = itemView.getContext();
             imageView = (ImageView) itemView.findViewById(R.id.imageView);
             itemView.setOnClickListener(this);
+            if (MoviesActivity.mTwoPane == true) {
+                // Timber.v(TAG + " MovieAdapterViewHolder(View itemView) and MoviesActivity.mTwoPane is " + MoviesActivity.mTwoPane);
+                // itemView.setSelected(true);
+                /*Bundle arguments = new Bundle();
+                arguments.putString("id", mMovies[0].getId());
+                arguments.putString("title", mMovies[0].getTitle());
+                arguments.putString("poster_thumbnail", mMovies[0].getThumbnail());
+                arguments.putString("release_date", mMovies[0].getDate());
+                arguments.putString("rating", mMovies[0].getRating());
+                arguments.putString("synopsis", mMovies[0].getSynopsis());
+                DetailFragment fragment = new DetailFragment();
+                fragment.setArguments(arguments);
+                context.getApplicationContext().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_detail_container, fragment)
+                        .commit();*/
+                /*Intent intent = new Intent(context, DetailActivity.class);
+                intent.putExtra("id", mMovies[0].getId());
+                intent.putExtra("title", mMovies[0].getTitle());
+                intent.putExtra("poster_thumbnail", mMovies[0].getThumbnail());
+                intent.putExtra("release_date", mMovies[0].getDate());
+                intent.putExtra("rating", mMovies[0].getRating());
+                intent.putExtra("synopsis", mMovies[0].getSynopsis());
+
+                context.startActivity(intent);*/
+            }
         }
 
         @Override
@@ -69,7 +94,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
             Context context = itemView.getContext();
             Toast.makeText(context, "position: " + position, Toast.LENGTH_SHORT).show();
 
-            if (MainActivity.mTwoPane == true) {
+            if (MoviesActivity.mTwoPane == true) {
                 // launch as fragment
             } else {
                 // launch as activity

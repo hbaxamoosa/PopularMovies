@@ -29,7 +29,7 @@ public class DetailFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Activity activity = this.getActivity();
         CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
-        Timber.v(TAG + " getActivity().getIntent().getExtras().getString(\"title\") " + activity.getIntent().getExtras().getString("title"));
+        // Timber.v(TAG + " getActivity().getIntent().getExtras().getString(\"title\") " + activity.getIntent().getExtras().getString("title"));
         if (appBarLayout != null) {
             appBarLayout.setTitle(getActivity().getIntent().getExtras().getString("title"));
         } else {
@@ -53,7 +53,7 @@ public class DetailFragment extends Fragment {
         // favorite button is for adding/removing favorites
 
         if (getActivity().getIntent().getExtras() != null) {
-            // Timber.v(TAG + " getActivity().getIntent().getExtras() != null");
+            Timber.v(TAG + " getActivity().getIntent().getExtras() != null");
             // Use the id to get the trailers
             FetchMovieTrailersTask trailersTask = new FetchMovieTrailersTask(getContext(), getActivity().getIntent().getExtras().getString("id"), rootView);
             trailersTask.execute();
@@ -68,8 +68,23 @@ public class DetailFragment extends Fragment {
             release_date.setText(getActivity().getIntent().getExtras().getString("release_date"));
             rating.setText(getActivity().getIntent().getExtras().getString("rating"));
             synopsis.setText(getActivity().getIntent().getExtras().getString("synopsis"));
+        } else { // getIntent().getExtras() == null
+            Timber.v(TAG + " getActivity().getIntent().getExtras() == null");
+            FetchMovieTrailersTask trailersTask = new FetchMovieTrailersTask(getContext(), "135397", rootView);
+            trailersTask.execute();
+
+            // Use the id to get the reviews
+            FetchMovieReviewsTask reviewsTask = new FetchMovieReviewsTask(getContext(), "135397", rootView);
+            reviewsTask.execute();
+
+            String poster_path = "http://image.tmdb.org/t/p/w500/" + "/jjBgi2r5cRt36xF6iNUEhzscEcb.jpg";
+            Picasso.with(getActivity()).load(poster_path).into(poster_thumbnail);
+            title.setText("Jurassic World");
+            release_date.setText("2015-06-12");
+            rating.setText("6.9");
+            synopsis.setText("Twenty-two years after the events of Jurassic Park, Isla Nublar now features a fully functioning dinosaur theme park, Jurassic World, as originally envisioned by John Hammond.");
         }
-        // Timber.v(TAG + " returning rootView");
+        Timber.v(TAG + " returning rootView");
         return rootView;
     }
 

@@ -47,7 +47,7 @@ public class FetchMoviesTask extends AsyncTask<Void, Void, Movie[]> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        Timber.v(TAG + " inside onPreExecute");
+        // Timber.v(TAG + " inside onPreExecute");
 
         Resources res = PopularMovies.getAppContext().getResources();
 
@@ -55,7 +55,7 @@ public class FetchMoviesTask extends AsyncTask<Void, Void, Movie[]> {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(PopularMovies.getAppContext());
         String sort_type = sharedPref.getString(res.getString(R.string.prefs_sorting_key), res.getString(R.string.prefs_sorting_default));
 
-        Timber.v(TAG + " sort_type = " + sort_type);
+        // Timber.v(TAG + " sort_type = " + sort_type);
         if (sort_type.equals(res.getString(R.string.most_popular))) {
             sort = "popularity.desc";
         } else if (sort_type.equals(res.getString(R.string.highest_rated))) {
@@ -66,7 +66,7 @@ public class FetchMoviesTask extends AsyncTask<Void, Void, Movie[]> {
     @Override
     protected void onPostExecute(Movie[] movies) {
         super.onPostExecute(movies);
-        Timber.v(TAG + " inside onPostExecute(Movie[] movies)");
+        // Timber.v(TAG + " inside onPostExecute(Movie[] movies)");
         mAdapter = new MovieAdapter(movies);
         MoviesActivity.mRecyclerView.setAdapter(mAdapter);
     }
@@ -78,7 +78,7 @@ public class FetchMoviesTask extends AsyncTask<Void, Void, Movie[]> {
 
     @Override
     protected Movie[] doInBackground(Void... params) {
-        Timber.v(TAG + " inside doInBackground");
+        // Timber.v(TAG + " inside doInBackground");
 
         // These two need to be declared outside the try/catch
         // so that they can be closed in the finally block.
@@ -101,7 +101,7 @@ public class FetchMoviesTask extends AsyncTask<Void, Void, Movie[]> {
 
             URL url = new URL(builtUri.toString());
 
-            Timber.v(TAG + " Built URI " + builtUri.toString());
+            // Timber.v(TAG + " Built URI " + builtUri.toString());
 
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
@@ -129,7 +129,7 @@ public class FetchMoviesTask extends AsyncTask<Void, Void, Movie[]> {
                 return null;
             }
             moviesJsonStr = buffer.toString();
-            Timber.v(TAG + moviesJsonStr);
+            // Timber.v(TAG + moviesJsonStr);
         } catch (IOException e) {
             Timber.e(TAG + " Error " + e);
             return null;
@@ -164,7 +164,7 @@ public class FetchMoviesTask extends AsyncTask<Void, Void, Movie[]> {
         // Create JSONArray from JSONObject
         JSONArray moviesArray = moviesJsonObj.getJSONArray(moviesJson);
 
-        Timber.v(TAG + " JSONObject movie size = " + moviesArray.length());
+        // Timber.v(TAG + " JSONObject movie size = " + moviesArray.length());
 
         // Create Movie objects array
         Movie[] movies = new Movie[moviesArray.length()];

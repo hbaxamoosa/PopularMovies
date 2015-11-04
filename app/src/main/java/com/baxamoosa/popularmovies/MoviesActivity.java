@@ -70,13 +70,26 @@ public class MoviesActivity extends AppCompatActivity implements fragments.Movie
 
         if (savedInstanceState == null) {
             if (isConnected) {
-                Timber.v(TAG + " savedInstanceState != null");
-                // TODO: restore state from saved instance
-
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 fragments.MoviesActivity fragment = new fragments.MoviesActivity();
                 transaction.replace(R.id.container, fragment);
                 transaction.commit();
+
+                View movieDetails = findViewById(R.id.fragment_detail_container);
+                if (movieDetails != null && movieDetails.getVisibility() == View.VISIBLE) {
+                    // The detail container view will be present only in the
+                    // large-screen layouts (res/values-large and
+                    // res/values-sw600dp). If this view is present, then the
+                    // activity should be in two-pane mode.
+                    mTwoPane = true;
+                    Timber.v(TAG + " i am here!");
+
+                    // In two-pane mode, list items should be given the 'activated' state when touched.
+                    FragmentTransaction mTransaction = getSupportFragmentManager().beginTransaction();
+                    DetailFragment mFragment = new DetailFragment();
+                    mTransaction.replace(R.id.fragment_detail_container, mFragment);
+                    mTransaction.commit();
+                }
             } else {
                 Timber.v(TAG + " (inside else) isConnected: " + isConnected);
                 Toast.makeText(this, "No network connection.", Toast.LENGTH_LONG).show();
@@ -101,6 +114,22 @@ public class MoviesActivity extends AppCompatActivity implements fragments.Movie
             fragments.MoviesActivity fragment = new fragments.MoviesActivity();
             transaction.replace(R.id.container, fragment);
             transaction.commit();
+
+            View movieDetails = findViewById(R.id.fragment_detail_container);
+            if (movieDetails != null && movieDetails.getVisibility() == View.VISIBLE) {
+                // The detail container view will be present only in the
+                // large-screen layouts (res/values-large and
+                // res/values-sw600dp). If this view is present, then the
+                // activity should be in two-pane mode.
+                mTwoPane = true;
+
+                Timber.v(TAG + " now i am here");
+                // In two-pane mode, list items should be given the 'activated' state when touched.
+                FragmentTransaction mTransaction = getSupportFragmentManager().beginTransaction();
+                DetailFragment mFragment = new DetailFragment();
+                mTransaction.replace(R.id.fragment_detail_container, mFragment);
+                mTransaction.commit();
+            }
         }
     }
 
@@ -127,9 +156,12 @@ public class MoviesActivity extends AppCompatActivity implements fragments.Movie
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Callback method from {@link fragments.MoviesActivity}
+     * indicating that the item with the given ID was selected.
+     */
     @Override
     public void OnItemClicked(String id) {
         Timber.v(TAG + " OnItemClicked(String id)");
-        Toast.makeText(this, "id is: " + id, Toast.LENGTH_LONG).show();
     }
 }

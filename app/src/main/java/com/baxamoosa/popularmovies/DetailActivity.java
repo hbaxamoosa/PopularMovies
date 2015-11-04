@@ -40,7 +40,13 @@ public class DetailActivity extends AppCompatActivity {
 
         Timber.v(TAG + " Activity Created");
 
-        if (savedInstanceState == null) {
+        if (MoviesActivity.mTwoPane == true){
+            Timber.v(TAG + " MoviesActivity.mTwoPane is " + MoviesActivity.mTwoPane);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_detail_container, new DetailFragment())
+                    .commit();
+        } else if (savedInstanceState == null) {
+            Timber.v(TAG + " else if (savedInstanceState == null)");
             getSupportFragmentManager().beginTransaction().add(R.id.fragment_detail_container, new DetailFragment());
         }
     }
@@ -59,7 +65,7 @@ public class DetailActivity extends AppCompatActivity {
             //
             // http://developer.android.com/design/patterns/navigation.html#up-vs-back
             //
-            NavUtils.navigateUpTo(this, new Intent(this, MainActivity.class));
+            NavUtils.navigateUpTo(this, new Intent(this, MoviesActivity.class));
             return true;
         }
         return super.onOptionsItemSelected(item);
