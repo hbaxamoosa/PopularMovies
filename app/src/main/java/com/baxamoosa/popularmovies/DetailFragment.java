@@ -52,23 +52,24 @@ public class DetailFragment extends Fragment {
         Button favorite = (Button) rootView.findViewById(R.id.btn_favorite);
         // favorite button is for adding/removing favorites
 
-        if (getActivity().getIntent().getExtras() != null) {
+        Bundle arguments = getArguments();
+        if (arguments != null) { // tablet
             Timber.v(TAG + " getActivity().getIntent().getExtras() != null");
             // Use the id to get the trailers
-            FetchMovieTrailersTask trailersTask = new FetchMovieTrailersTask(getContext(), getActivity().getIntent().getExtras().getString("id"), rootView);
+            FetchMovieTrailersTask trailersTask = new FetchMovieTrailersTask(getContext(), arguments.getString("id"), rootView);
             trailersTask.execute();
 
             // Use the id to get the reviews
-            FetchMovieReviewsTask reviewsTask = new FetchMovieReviewsTask(getContext(), getActivity().getIntent().getExtras().getString("id"), rootView);
+            FetchMovieReviewsTask reviewsTask = new FetchMovieReviewsTask(getContext(), arguments.getString("id"), rootView);
             reviewsTask.execute();
 
-            String poster_path = "http://image.tmdb.org/t/p/w500/" + getActivity().getIntent().getExtras().getString("poster_thumbnail");
+            String poster_path = "http://image.tmdb.org/t/p/w500/" + arguments.getString("poster_thumbnail");
             Picasso.with(getActivity()).load(poster_path).into(poster_thumbnail);
-            title.setText(getActivity().getIntent().getExtras().getString("title"));
-            release_date.setText(getActivity().getIntent().getExtras().getString("release_date"));
-            rating.setText(getActivity().getIntent().getExtras().getString("rating"));
-            synopsis.setText(getActivity().getIntent().getExtras().getString("synopsis"));
-        } else { // getIntent().getExtras() == null
+            title.setText(arguments.getString("title"));
+            release_date.setText(arguments.getString("release_date"));
+            rating.setText(arguments.getString("rating"));
+            synopsis.setText(arguments.getString("synopsis"));
+        } else { // arguments == null, so phone
             Timber.v(TAG + " getActivity().getIntent().getExtras() == null");
             FetchMovieTrailersTask trailersTask = new FetchMovieTrailersTask(getContext(), "135397", rootView);
             trailersTask.execute();
