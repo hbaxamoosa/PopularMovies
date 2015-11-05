@@ -102,7 +102,7 @@ public class FetchMovieReviewsTask extends AsyncTask<Void, Void, MovieReviews[]>
                 return null;
             }
             reviewsJsonStr = buffer.toString();
-            Timber.v(TAG + reviewsJsonStr);
+            // Timber.v(TAG + reviewsJsonStr);
         } catch (IOException e) {
             Timber.e(TAG + "Error " + e);
             // If the code didn't successfully get the weather data, there's no point in attemping

@@ -94,7 +94,7 @@ public class FetchMovieTrailersTask extends AsyncTask<Void, Void, MovieTrailers[
                 return null;
             }
             trailersJsonStr = buffer.toString();
-            Timber.v(TAG + trailersJsonStr);
+            // Timber.v(TAG + trailersJsonStr);
         } catch (IOException e) {
             Timber.e(TAG + "Error " + e);
             // If the code didn't successfully get the weather data, there's no point in attemping

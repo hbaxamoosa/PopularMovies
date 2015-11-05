@@ -7,8 +7,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -19,10 +17,11 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import fragments.MoviesFragment;
 import model.Movie;
 import timber.log.Timber;
 
-public class MoviesActivity extends AppCompatActivity implements fragments.MoviesActivity.OnItemClickedListener {
+public class MoviesActivity extends AppCompatActivity implements MoviesFragment.Callback {
 
     public static boolean mTwoPane;  // Whether or not the activity is in two-pane mode, i.e. running on a tablet device.
     private final String TAG = MoviesActivity.class.getSimpleName();
@@ -46,14 +45,14 @@ public class MoviesActivity extends AppCompatActivity implements fragments.Movie
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
-        });
+        });*/
 
         ConnectivityManager cm =
                 (ConnectivityManager) PopularMovies.getAppContext().getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -63,7 +62,7 @@ public class MoviesActivity extends AppCompatActivity implements fragments.Movie
                 activeNetwork.isConnectedOrConnecting();
 
         if (savedInstanceState != null) {
-            Timber.v(TAG + " savedInstanceState != null");
+            // Timber.v(TAG + " savedInstanceState != null");
             listOfMovies = (ArrayList<Movie>) savedInstanceState.get("key");
             mSortBy = savedInstanceState.getString("sort_by");
         }
@@ -71,7 +70,7 @@ public class MoviesActivity extends AppCompatActivity implements fragments.Movie
         if (savedInstanceState == null) {
             if (isConnected) {
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                fragments.MoviesActivity fragment = new fragments.MoviesActivity();
+                MoviesFragment fragment = new MoviesFragment();
                 transaction.replace(R.id.container, fragment);
                 transaction.commit();
 
@@ -82,7 +81,6 @@ public class MoviesActivity extends AppCompatActivity implements fragments.Movie
                     // res/values-sw600dp). If this view is present, then the
                     // activity should be in two-pane mode.
                     mTwoPane = true;
-                    Timber.v(TAG + " i am here!");
 
                     // In two-pane mode, list items should be given the 'activated' state when touched.
                     FragmentTransaction mTransaction = getSupportFragmentManager().beginTransaction();
@@ -91,7 +89,7 @@ public class MoviesActivity extends AppCompatActivity implements fragments.Movie
                     mTransaction.commit();
                 }
             } else {
-                Timber.v(TAG + " (inside else) isConnected: " + isConnected);
+                // Timber.v(TAG + " (inside else) isConnected: " + isConnected);
                 Toast.makeText(this, "No network connection.", Toast.LENGTH_LONG).show();
             }
         }
@@ -111,7 +109,7 @@ public class MoviesActivity extends AppCompatActivity implements fragments.Movie
             Timber.v(TAG + " onResume()");
             // if back from settings activity, the preference value may be changed
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            fragments.MoviesActivity fragment = new fragments.MoviesActivity();
+            MoviesFragment fragment = new MoviesFragment();
             transaction.replace(R.id.container, fragment);
             transaction.commit();
 
@@ -123,7 +121,6 @@ public class MoviesActivity extends AppCompatActivity implements fragments.Movie
                 // activity should be in two-pane mode.
                 mTwoPane = true;
 
-                Timber.v(TAG + " now i am here");
                 // In two-pane mode, list items should be given the 'activated' state when touched.
                 FragmentTransaction mTransaction = getSupportFragmentManager().beginTransaction();
                 DetailFragment mFragment = new DetailFragment();
@@ -157,11 +154,39 @@ public class MoviesActivity extends AppCompatActivity implements fragments.Movie
     }
 
     /**
-     * Callback method from {@link fragments.MoviesActivity}
+     * Callback method from {@link MoviesFragment}
      * indicating that the item with the given ID was selected.
      */
     @Override
-    public void OnItemClicked(String id) {
-        Timber.v(TAG + " OnItemClicked(String id)");
+    public void onItemSelected(int position, Movie[] mMovies) {
+        Timber.v(TAG + " inside onItemSelected(String id) is " + position);
+        if (mTwoPane) {
+            // In two-pane mode, show the detail view in this activity by
+            // adding or replacing the detail fragment using a
+            // fragment transaction.
+            Bundle arguments = new Bundle();
+            arguments.putString("id", mMovies[position].getId());
+            arguments.putString("title", mMovies[position].getTitle());
+            arguments.putString("poster_thumbnail", mMovies[position].getThumbnail());
+            arguments.putString("release_date", mMovies[position].getDate());
+            arguments.putString("rating", mMovies[position].getRating());
+
+            DetailFragment fragment = new DetailFragment();
+            fragment.setArguments(arguments);
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_detail_container, fragment)
+                    .commit();
+        } else { // phone
+            Intent intent = new Intent(this, DetailActivity.class);
+            intent.putExtra("id", mMovies[position].getId());
+            intent.putExtra("title", mMovies[position].getTitle());
+            intent.putExtra("poster_thumbnail", mMovies[position].getThumbnail());
+            intent.putExtra("release_date", mMovies[position].getDate());
+            intent.putExtra("rating", mMovies[position].getRating());
+            intent.putExtra("synopsis", mMovies[position].getSynopsis());
+
+            this.startActivity(intent);
+        }
     }
 }

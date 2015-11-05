@@ -27,7 +27,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import adapter.MovieAdapter;
-import fragments.MoviesActivity;
+import fragments.MoviesFragment;
 import model.Movie;
 import timber.log.Timber;
 
@@ -68,7 +68,7 @@ public class FetchMoviesTask extends AsyncTask<Void, Void, Movie[]> {
         super.onPostExecute(movies);
         // Timber.v(TAG + " inside onPostExecute(Movie[] movies)");
         mAdapter = new MovieAdapter(movies);
-        MoviesActivity.mRecyclerView.setAdapter(mAdapter);
+        MoviesFragment.mRecyclerView.setAdapter(mAdapter);
     }
 
     @Override

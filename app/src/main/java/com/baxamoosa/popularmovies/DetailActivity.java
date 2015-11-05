@@ -40,15 +40,23 @@ public class DetailActivity extends AppCompatActivity {
 
         Timber.v(TAG + " Activity Created");
 
-        if (MoviesActivity.mTwoPane == true){
-            Timber.v(TAG + " MoviesActivity.mTwoPane is " + MoviesActivity.mTwoPane);
+        if (MoviesActivity.mTwoPane == true && getIntent().getExtras() == null){
+            // initial draw od fragments
+            Timber.v(TAG + " MoviesFragment.mTwoPane is " + MoviesActivity.mTwoPane);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_detail_container, new DetailFragment())
                     .commit();
-        } else if (savedInstanceState == null) {
+        } else if (MoviesActivity.mTwoPane == true && getIntent().getExtras() != null) {
+            // called from MovieAdapter with intents
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_detail_container, new DetailFragment())
+                    .commit();
+        }
+
+        /*else if (savedInstanceState == null) {
             Timber.v(TAG + " else if (savedInstanceState == null)");
             getSupportFragmentManager().beginTransaction().add(R.id.fragment_detail_container, new DetailFragment());
-        }
+        }*/
     }
 
     @Override
