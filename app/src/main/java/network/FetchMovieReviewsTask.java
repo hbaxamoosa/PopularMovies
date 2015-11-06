@@ -144,7 +144,7 @@ public class FetchMovieReviewsTask extends AsyncTask<Void, Void, MovieReviews[]>
         // Timber.v(TAG + " inside getReviewsFromJson " + reviewsJsonStr);
 
         final String reviewsJson = "results";
-        //Timber.v(TAG + " " + reviewsJson);
+        // Timber.v(TAG + " " + reviewsJson);
 
         // Create JSONObject from results string
         JSONObject reviewsJsonObj = new JSONObject(reviewsJsonStr);
@@ -154,10 +154,10 @@ public class FetchMovieReviewsTask extends AsyncTask<Void, Void, MovieReviews[]>
 
         // Create Movie objects array
         MovieReviews[] mMovieReviews = new MovieReviews[reviewsArray.length()];
-        //Timber.v(TAG + " " + "reviewsArray.length()" + " " + reviewsArray.length());
+        // Timber.v(TAG + " " + "reviewsArray.length()" + " " + reviewsArray.length());
 
         for (int i = 0; i < reviewsArray.length(); i++) {
-            //Timber.v(TAG + " reviewsArray i = " + i);
+            // Timber.v(TAG + " reviewsArray i = " + i);
 
             // Get JSON object representing a single movie
             JSONObject reviewsArrayJSONObject = reviewsArray.getJSONObject(i);
@@ -165,7 +165,7 @@ public class FetchMovieReviewsTask extends AsyncTask<Void, Void, MovieReviews[]>
             mMovieReviews[i] = new MovieReviews();
 
             // get id
-            //Timber.v(TAG + " id :" + " " + reviewsArrayJSONObject.getString("id"));
+            // Timber.v(TAG + " id :" + " " + reviewsArrayJSONObject.getString("id"));
             mMovieReviews[i].setId(reviewsArrayJSONObject.getString("id"));
 
             // get author
@@ -173,7 +173,7 @@ public class FetchMovieReviewsTask extends AsyncTask<Void, Void, MovieReviews[]>
             mMovieReviews[i].setAuthor(reviewsArrayJSONObject.getString("author"));
 
             // get id
-            //Timber.v(TAG + " content :" + " " + reviewsArrayJSONObject.getString("content"));
+            // Timber.v(TAG + " content :" + " " + reviewsArrayJSONObject.getString("content"));
             mMovieReviews[i].setContent(reviewsArrayJSONObject.getString("content"));
 
         }

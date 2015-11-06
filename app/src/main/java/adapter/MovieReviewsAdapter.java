@@ -29,7 +29,7 @@ public class MovieReviewsAdapter extends ArrayAdapter<MovieReviews> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        //Timber.v(TAG + " getView(int position, View convertView, ViewGroup parent)" + " position: " + position);
+        // Timber.v(TAG + " getView(int position, View convertView, ViewGroup parent)" + " position: " + position);
 
         View row = convertView;
         MovieReviewsHolder holder = null;

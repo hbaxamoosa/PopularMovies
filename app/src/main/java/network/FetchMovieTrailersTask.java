@@ -138,7 +138,7 @@ public class FetchMovieTrailersTask extends AsyncTask<Void, Void, MovieTrailers[
         // Timber.v(TAG + " " + "trailersArray.length()" + " " + trailersArray.length());
 
         for (int i = 0; i < trailersArray.length(); i++) {
-            Timber.v(TAG + " i = " + i);
+            // Timber.v(TAG + " i = " + i);
             // Get JSON object representing a single movie
             JSONObject trailersArrayJSONObject = trailersArray.getJSONObject(i);
 

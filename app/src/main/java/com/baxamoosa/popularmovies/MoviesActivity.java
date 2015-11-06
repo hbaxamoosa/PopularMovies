@@ -24,6 +24,7 @@ import timber.log.Timber;
 public class MoviesActivity extends AppCompatActivity implements MoviesFragment.Callback {
 
     public static boolean mTwoPane;  // Whether or not the activity is in two-pane mode, i.e. running on a tablet device.
+    public static boolean firstLoad;  // Whether or not the activity is in two-pane mode and whether this is the first load or not.
     private final String TAG = MoviesActivity.class.getSimpleName();
     private ArrayList<Movie> listOfMovies;
     private String mSortBy;
@@ -40,6 +41,9 @@ public class MoviesActivity extends AppCompatActivity implements MoviesFragment.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_moviesactivity);
+
+        // set a flag to track whether this is the first time the MovieAdapter is being loaded into the app.
+        firstLoad = true;
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -121,7 +125,6 @@ public class MoviesActivity extends AppCompatActivity implements MoviesFragment.
                 // activity should be in two-pane mode.
                 mTwoPane = true;
 
-                // In two-pane mode, list items should be given the 'activated' state when touched.
                 FragmentTransaction mTransaction = getSupportFragmentManager().beginTransaction();
                 DetailFragment mFragment = new DetailFragment();
                 mTransaction.replace(R.id.fragment_detail_container, mFragment);
@@ -159,7 +162,8 @@ public class MoviesActivity extends AppCompatActivity implements MoviesFragment.
      */
     @Override
     public void onItemSelected(int position, Movie[] mMovies) {
-        Timber.v(TAG + " inside onItemSelected(String id) is " + position);
+        Timber.v(TAG + " inside onItemSelected(int position, Movie[] mMovies) position is " + position);
+        Timber.v(TAG + " inside onItemSelected(int position, Movie[] mMovies) mMovies.length is " + mMovies.length);
         if (mTwoPane) {
             // In two-pane mode, show the detail view in this activity by
             // adding or replacing the detail fragment using a

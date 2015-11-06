@@ -2,6 +2,7 @@ package com.baxamoosa.popularmovies;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NavUtils;
@@ -38,6 +39,12 @@ public class DetailActivity extends AppCompatActivity {
         // Show the Up button in the action bar.
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) this.findViewById(R.id.toolbar_layout);
+        Timber.v(TAG + " getActivity().getIntent().getExtras().getString(\"title\") " + this.getIntent().getExtras().getString("title"));
+        if (appBarLayout != null) {
+            Timber.v(TAG + " appBarLayout != null");
+            appBarLayout.setTitle(this.getIntent().getExtras().getString("title"));
+        }
         Timber.v(TAG + " Activity Created");
 
         if (MoviesActivity.mTwoPane == true && getIntent().getExtras() == null){

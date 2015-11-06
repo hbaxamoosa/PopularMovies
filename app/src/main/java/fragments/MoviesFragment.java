@@ -1,5 +1,6 @@
 package fragments;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -8,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.baxamoosa.popularmovies.MoviesActivity;
 import com.baxamoosa.popularmovies.PopularMovies;
 import com.baxamoosa.popularmovies.R;
 
@@ -42,20 +44,27 @@ public class MoviesFragment extends android.support.v4.app.Fragment {
                              Bundle savedInstanceState) {
         // Timber.v(TAG + " inside onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)");
 
-        // Timber.v(TAG + "popularmovies.MoviesFragment.mTwoPane is " + com.baxamoosa.popularmovies.MoviesActivity.mTwoPane);
         final View rootView = inflater.inflate(R.layout.activity_main, container, false);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
-        mLayoutManager = new GridLayoutManager(PopularMovies.getAppContext(), 2);
+
+        if (!MoviesActivity.mTwoPane && getContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            // check to see if the phone is in portrait for phone
+            mLayoutManager = new GridLayoutManager(PopularMovies.getAppContext(), 2);
+        } else if (!MoviesActivity.mTwoPane && getContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            // check to see if the phone is in landscape for phone
+            mLayoutManager = new GridLayoutManager(PopularMovies.getAppContext(), 4);
+        } else if (MoviesActivity.mTwoPane && getContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            // check to see if the phone is in landscape for tablet
+            mLayoutManager = new GridLayoutManager(PopularMovies.getAppContext(), 2);
+        } else {
+            // (MoviesActivity.mTwoPane && getContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
+            // check to see if the phone is in portrait for tablet
+            mLayoutManager = new GridLayoutManager(PopularMovies.getAppContext(), 2);
+        }
+
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        /*mRecyclerView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getActivity(), "clicked the onClickListener in RecyclerView", Toast.LENGTH_SHORT).show();
-                ((Callback) getActivity()).onItemSelected(12345);
-            }
-        });*/
         return rootView;
     }
 
@@ -68,12 +77,11 @@ public class MoviesFragment extends android.support.v4.app.Fragment {
 
     /**
      * A callback interface that all activities containing this fragment must
-     * implement. This mechanism allows activities to be notified of item
-     * selections.
+     * implement. This mechanism allows activities to be notified of item selections.
      */
     public interface Callback {
         /**
-         * DetailFragmentCallback for when an item has been selected.
+         * MoviesActivity Callback for when an item has been selected.
          */
         void onItemSelected(int position, Movie[] movie);
     }

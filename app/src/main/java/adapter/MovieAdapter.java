@@ -7,11 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.baxamoosa.popularmovies.MoviesActivity;
 import com.baxamoosa.popularmovies.R;
 import com.squareup.picasso.Picasso;
 
 import fragments.MoviesFragment;
 import model.Movie;
+import timber.log.Timber;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapterViewHolder> {
 
@@ -29,6 +31,11 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     public MovieAdapter.MovieAdapterViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         // Timber.v(TAG + " inside onCreateViewHolder");
         View itemView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.adapter_movieadapter, viewGroup, false);
+        if (MoviesActivity.mTwoPane == true && MoviesActivity.firstLoad == true) { // set the selected item to position 0 for tablet
+            Timber.v(TAG + " calling ((MoviesFragment.Callback) context).onItemSelected(0, mMovies)");
+            ((MoviesFragment.Callback) viewGroup.getContext()).onItemSelected(0, mMovies);
+            MoviesActivity.firstLoad = false;
+        }
         return new MovieAdapterViewHolder(itemView);
     }
 
@@ -51,6 +58,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     public class MovieAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         protected ImageView imageView;
+
 
         public MovieAdapterViewHolder(View itemView) {
             super(itemView);

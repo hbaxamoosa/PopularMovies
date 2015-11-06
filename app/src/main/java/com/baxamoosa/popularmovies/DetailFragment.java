@@ -1,8 +1,7 @@
 package com.baxamoosa.popularmovies;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,34 +26,40 @@ public class DetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Activity activity = this.getActivity();
-        CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
-        // Timber.v(TAG + " getActivity().getIntent().getExtras().getString(\"title\") " + activity.getIntent().getExtras().getString("title"));
-        if (appBarLayout != null) {
-            appBarLayout.setTitle(getActivity().getIntent().getExtras().getString("title"));
-        } else {
-            Timber.v(TAG + " appBarLayout = null");
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        Timber.v(TAG + " inside onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)");
+        // Timber.v(TAG + " inside onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)");
 
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
 
+        Bundle arguments = getArguments(); // getArguments() for fragment, i.e. tablet mode
+
         ImageView poster_thumbnail = (ImageView) rootView.findViewById(R.id.poster_thumbnail);
-        TextView title = (TextView) rootView.findViewById(R.id.title);
+
+        TextView title = null;
+        if (arguments != null) { // tablet
+            title = (TextView) rootView.findViewById(R.id.title);
+        }
         TextView release_date = (TextView) rootView.findViewById(R.id.release_date);
         TextView rating = (TextView) rootView.findViewById(R.id.rating);
         TextView synopsis = (TextView) rootView.findViewById(R.id.synopsis);
         Button favorite = (Button) rootView.findViewById(R.id.btn_favorite);
         // favorite button is for adding/removing favorites
+        favorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+                setFavorite(view);
+            }
+        });
 
-        Bundle arguments = getArguments();
-        if (arguments != null) { // tablet
-            Timber.v(TAG + " getActivity().getIntent().getExtras() != null");
+
+        if (MoviesActivity.mTwoPane == true && arguments != null) { // tablet, with click
+            Timber.v(TAG + " (MoviesActivity.mTwoPane == true && arguments != null)");
             // Use the id to get the trailers
             FetchMovieTrailersTask trailersTask = new FetchMovieTrailersTask(getContext(), arguments.getString("id"), rootView);
             trailersTask.execute();
@@ -69,23 +74,41 @@ public class DetailFragment extends Fragment {
             release_date.setText(arguments.getString("release_date"));
             rating.setText(arguments.getString("rating"));
             synopsis.setText(arguments.getString("synopsis"));
-        } else { // arguments == null, so phone
-            Timber.v(TAG + " getActivity().getIntent().getExtras() == null");
-            FetchMovieTrailersTask trailersTask = new FetchMovieTrailersTask(getContext(), "135397", rootView);
+        } else if (MoviesActivity.mTwoPane == true && arguments == null) { // tablet, with click
+            Timber.v(TAG + " else if (MoviesActivity.mTwoPane == true && arguments == null)");
+            // Use the id to get the trailers
+           /* FetchMovieTrailersTask trailersTask = new FetchMovieTrailersTask(getContext(), arguments.getString("id"), rootView);
+            trailersTask.execute();*/
+
+            // Use the id to get the reviews
+            /*FetchMovieReviewsTask reviewsTask = new FetchMovieReviewsTask(getContext(), arguments.getString("id"), rootView);
+            reviewsTask.execute();*/
+
+            // String poster_path = "http://image.tmdb.org/t/p/w500/" + arguments.getString("poster_thumbnail");
+            // Picasso.with(getActivity()).load(poster_path).into(poster_thumbnail);
+            // title.setText(arguments.getString("title"));
+            // release_date.setText(arguments.getString("release_date"));
+            // rating.setText(arguments.getString("rating"));
+            synopsis.setText("Please select a movie.");
+        } else if (MoviesActivity.mTwoPane == false) { // && arguments == null, so phone
+            Timber.v(TAG + " else if (MoviesActivity.mTwoPane == false");
+            // Use the id to get the trailers
+            FetchMovieTrailersTask trailersTask = new FetchMovieTrailersTask(getContext(), getActivity().getIntent().getExtras().getString("id"), rootView);
             trailersTask.execute();
 
             // Use the id to get the reviews
-            FetchMovieReviewsTask reviewsTask = new FetchMovieReviewsTask(getContext(), "135397", rootView);
+            FetchMovieReviewsTask reviewsTask = new FetchMovieReviewsTask(getContext(), getActivity().getIntent().getExtras().getString("id"), rootView);
             reviewsTask.execute();
 
-            String poster_path = "http://image.tmdb.org/t/p/w500/" + "/jjBgi2r5cRt36xF6iNUEhzscEcb.jpg";
+            String poster_path = "http://image.tmdb.org/t/p/w500/" + getActivity().getIntent().getExtras().getString("poster_thumbnail");
             Picasso.with(getActivity()).load(poster_path).into(poster_thumbnail);
-            title.setText("Jurassic World");
-            release_date.setText("2015-06-12");
-            rating.setText("6.9");
-            synopsis.setText("Twenty-two years after the events of Jurassic Park, Isla Nublar now features a fully functioning dinosaur theme park, Jurassic World, as originally envisioned by John Hammond.");
+            release_date.setText(getActivity().getIntent().getExtras().getString("release_date"));
+            rating.setText(getActivity().getIntent().getExtras().getString("rating"));
+            synopsis.setText(getActivity().getIntent().getExtras().getString("synopsis"));
+        } else {
+            Timber.v(TAG + " unknown state");
         }
-        Timber.v(TAG + " returning rootView");
+        // Timber.v(TAG + " returning rootView");
         return rootView;
     }
 
