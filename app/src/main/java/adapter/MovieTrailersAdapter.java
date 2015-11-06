@@ -11,11 +11,10 @@ import android.widget.TextView;
 import com.baxamoosa.popularmovies.R;
 
 import model.MovieTrailers;
+import timber.log.Timber;
 
 public class MovieTrailersAdapter extends ArrayAdapter<MovieTrailers> {
 
-    private static final String YOUTUBE_IMAGE_URL_PREFIX = "http://img.youtube.com/vi/";
-    private static final String YOUTUBE_IMAGE_URL_SUFFIX = "/0.jpg";
     private final String TAG = MovieTrailersAdapter.class.getSimpleName();
     private Context mContext;
     private int mLayoutResourceId;
@@ -48,10 +47,13 @@ public class MovieTrailersAdapter extends ArrayAdapter<MovieTrailers> {
             holder = (MovieTrailersHolder) row.getTag();
         }
 
-        holder.textView.setText(mMovieTrailers[position].getName());
-        // Timber.v(TAG + " mMovieTrailers[position].getKey(): " + mMovieTrailers[position].getKey());
-        // String thumbnail = YOUTUBE_IMAGE_URL_PREFIX + mMovieTrailers[position].getKey() + YOUTUBE_IMAGE_URL_SUFFIX;
-        // holder.imageView.setImageURI(Uri.parse(thumbnail));
+        if (getCount() == 0) {
+            Timber.v(TAG + " getCount() == 0 is true");
+            holder.textView.setText("No Trailers!");
+        } else {
+            Timber.v(TAG + " getCount() == 0 is false");
+            holder.textView.setText(mMovieTrailers[position].getName());
+        }
         return row;
     }
 

@@ -17,10 +17,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="5dp"
-            android:background="@color/colorPrimary"
             android:text="@string/hello_world"
             android:textAlignment="center"
-            android:textColor="@android:color/white"
+            android:textColor="@color/colorPrimary"
             android:textSize="@dimen/abc_text_size_headline_material"
             android:textStyle="bold" />
 

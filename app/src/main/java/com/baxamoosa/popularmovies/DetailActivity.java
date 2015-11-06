@@ -3,20 +3,14 @@ package com.baxamoosa.popularmovies;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
 
-import timber.log.Timber;
+import fragments.DetailFragment;
 
 public class DetailActivity extends AppCompatActivity {
-
-    // TODO: convert this activity into a Fragment
-    // TODO: create a tablet layout
 
     private final String TAG = DetailActivity.class.getSimpleName();
 
@@ -27,29 +21,28 @@ public class DetailActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
-        });
+        });*/
 
         // Show the Up button in the action bar.
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) this.findViewById(R.id.toolbar_layout);
-        Timber.v(TAG + " getActivity().getIntent().getExtras().getString(\"title\") " + this.getIntent().getExtras().getString("title"));
         if (appBarLayout != null) {
-            Timber.v(TAG + " appBarLayout != null");
+            // Timber.v(TAG + " appBarLayout != null");
             appBarLayout.setTitle(this.getIntent().getExtras().getString("title"));
         }
-        Timber.v(TAG + " Activity Created");
+        // Timber.v(TAG + " Activity Created");
 
         if (MoviesActivity.mTwoPane == true && getIntent().getExtras() == null){
             // initial draw od fragments
-            Timber.v(TAG + " MoviesFragment.mTwoPane is " + MoviesActivity.mTwoPane);
+            // Timber.v(TAG + " MoviesFragment.mTwoPane is " + MoviesActivity.mTwoPane);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_detail_container, new DetailFragment())
                     .commit();
@@ -59,11 +52,6 @@ public class DetailActivity extends AppCompatActivity {
                     .replace(R.id.fragment_detail_container, new DetailFragment())
                     .commit();
         }
-
-        /*else if (savedInstanceState == null) {
-            Timber.v(TAG + " else if (savedInstanceState == null)");
-            getSupportFragmentManager().beginTransaction().add(R.id.fragment_detail_container, new DetailFragment());
-        }*/
     }
 
     @Override

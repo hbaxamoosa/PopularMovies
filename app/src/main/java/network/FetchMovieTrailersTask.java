@@ -179,7 +179,6 @@ public class FetchMovieTrailersTask extends AsyncTask<Void, Void, MovieTrailers[
 
         // Timber.v(TAG + " inside onPostExecute(MovieTrailers[] movieTrailers)");
         ListView trailersLV = (ListView) rootView.findViewById(R.id.listview_trailers);
-        //ListView trailersLV = (ListView) rootView.findViewById(R.id.LVtrailers);
         MovieTrailersAdapter movieTrailerAdapter = new MovieTrailersAdapter(mContext, R.layout.listview_trailers_item_row, movieTrailers);
         trailersLV.setAdapter(movieTrailerAdapter);
         utils.setListViewHeightBasedOnChildren(trailersLV);

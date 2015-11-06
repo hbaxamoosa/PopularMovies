@@ -13,7 +13,6 @@ import com.squareup.picasso.Picasso;
 
 import fragments.MoviesFragment;
 import model.Movie;
-import timber.log.Timber;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapterViewHolder> {
 
@@ -32,7 +31,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
         // Timber.v(TAG + " inside onCreateViewHolder");
         View itemView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.adapter_movieadapter, viewGroup, false);
         if (MoviesActivity.mTwoPane == true && MoviesActivity.firstLoad == true) { // set the selected item to position 0 for tablet
-            Timber.v(TAG + " calling ((MoviesFragment.Callback) context).onItemSelected(0, mMovies)");
+            // Timber.v(TAG + " calling ((MoviesFragment.Callback) context).onItemSelected(0, mMovies)");
             ((MoviesFragment.Callback) viewGroup.getContext()).onItemSelected(0, mMovies);
             MoviesActivity.firstLoad = false;
         }

@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.baxamoosa.popularmovies.R;
 
 import model.MovieReviews;
+import timber.log.Timber;
 
 public class MovieReviewsAdapter extends ArrayAdapter<MovieReviews> {
 
@@ -46,12 +47,14 @@ public class MovieReviewsAdapter extends ArrayAdapter<MovieReviews> {
         }
 
         if (getCount() == 0) {
-            // Timber.v(TAG + " getCount() == 0 is true");
+            Timber.v(TAG + " getCount() == 0 is true");
             holder.textViewAuthor.setText("No reviews yet!");
             holder.textViewContent.setText("No reviews yet!");
         } else {
-            // Timber.v(TAG + " getCount() == 0 is false");
+            Timber.v(TAG + " getCount() == 0 is false");
+            Timber.v(TAG + " mMovieReviews[position].getAuthor() is " + mMovieReviews[position].getAuthor());
             holder.textViewAuthor.setText(mMovieReviews[position].getAuthor());
+            Timber.v(TAG + " mMovieReviews[position].getContent() is " + mMovieReviews[position].getContent());
             holder.textViewContent.setText(mMovieReviews[position].getContent());
         }
         return row;

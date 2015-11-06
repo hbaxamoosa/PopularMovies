@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import fragments.DetailFragment;
 import fragments.MoviesFragment;
 import model.Movie;
 import timber.log.Timber;
@@ -35,6 +36,7 @@ public class MoviesActivity extends AppCompatActivity implements MoviesFragment.
         outState.putString("sort_by", mSortBy);
         super.onSaveInstanceState(outState);
         Timber.v(TAG + " onSaveInstanceState");
+        firstLoad = true;
     }
 
     @Override
@@ -162,8 +164,8 @@ public class MoviesActivity extends AppCompatActivity implements MoviesFragment.
      */
     @Override
     public void onItemSelected(int position, Movie[] mMovies) {
-        Timber.v(TAG + " inside onItemSelected(int position, Movie[] mMovies) position is " + position);
-        Timber.v(TAG + " inside onItemSelected(int position, Movie[] mMovies) mMovies.length is " + mMovies.length);
+        // Timber.v(TAG + " inside onItemSelected(int position, Movie[] mMovies) position is " + position);
+        // Timber.v(TAG + " inside onItemSelected(int position, Movie[] mMovies) mMovies.length is " + mMovies.length);
         if (mTwoPane) {
             // In two-pane mode, show the detail view in this activity by
             // adding or replacing the detail fragment using a

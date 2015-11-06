@@ -1,4 +1,4 @@
-package com.baxamoosa.popularmovies;
+package fragments;
 
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.baxamoosa.popularmovies.MoviesActivity;
+import com.baxamoosa.popularmovies.R;
 import com.squareup.picasso.Picasso;
 
 import network.FetchMovieReviewsTask;
@@ -74,24 +76,8 @@ public class DetailFragment extends Fragment {
             release_date.setText(arguments.getString("release_date"));
             rating.setText(arguments.getString("rating"));
             synopsis.setText(arguments.getString("synopsis"));
-        } else if (MoviesActivity.mTwoPane == true && arguments == null) { // tablet, with click
-            Timber.v(TAG + " else if (MoviesActivity.mTwoPane == true && arguments == null)");
-            // Use the id to get the trailers
-           /* FetchMovieTrailersTask trailersTask = new FetchMovieTrailersTask(getContext(), arguments.getString("id"), rootView);
-            trailersTask.execute();*/
-
-            // Use the id to get the reviews
-            /*FetchMovieReviewsTask reviewsTask = new FetchMovieReviewsTask(getContext(), arguments.getString("id"), rootView);
-            reviewsTask.execute();*/
-
-            // String poster_path = "http://image.tmdb.org/t/p/w500/" + arguments.getString("poster_thumbnail");
-            // Picasso.with(getActivity()).load(poster_path).into(poster_thumbnail);
-            // title.setText(arguments.getString("title"));
-            // release_date.setText(arguments.getString("release_date"));
-            // rating.setText(arguments.getString("rating"));
-            synopsis.setText("Please select a movie.");
         } else if (MoviesActivity.mTwoPane == false) { // && arguments == null, so phone
-            Timber.v(TAG + " else if (MoviesActivity.mTwoPane == false");
+            Timber.v(TAG + " else if (MoviesActivity.mTwoPane == false)");
             // Use the id to get the trailers
             FetchMovieTrailersTask trailersTask = new FetchMovieTrailersTask(getContext(), getActivity().getIntent().getExtras().getString("id"), rootView);
             trailersTask.execute();
@@ -105,8 +91,6 @@ public class DetailFragment extends Fragment {
             release_date.setText(getActivity().getIntent().getExtras().getString("release_date"));
             rating.setText(getActivity().getIntent().getExtras().getString("rating"));
             synopsis.setText(getActivity().getIntent().getExtras().getString("synopsis"));
-        } else {
-            Timber.v(TAG + " unknown state");
         }
         // Timber.v(TAG + " returning rootView");
         return rootView;
