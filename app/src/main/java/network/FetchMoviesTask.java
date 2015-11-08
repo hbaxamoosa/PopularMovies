@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 
 import com.baxamoosa.popularmovies.Constants;
 import com.baxamoosa.popularmovies.PopularMovies;
@@ -34,11 +33,11 @@ import timber.log.Timber;
 public class FetchMoviesTask extends AsyncTask<Void, Void, Movie[]> {
 
     private final String TAG = FetchMoviesTask.class.getSimpleName();
-    private View rootView;
+    // private View rootView;
     private String sort;
-    private RecyclerView mRecyclerView;
+    // private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
+    // private RecyclerView.LayoutManager mLayoutManager;
 
 
     public FetchMoviesTask() {
@@ -87,6 +86,7 @@ public class FetchMoviesTask extends AsyncTask<Void, Void, Movie[]> {
 
         // Will contain the raw JSON response as a string.
         String moviesJsonStr = null;
+
 
         try {
             // Construct the URL for the themoviedb.org API

@@ -1,7 +1,17 @@
 package fragments;
 
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.database.Cursor;
+import android.database.DatabaseUtils;
+import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,30 +23,48 @@ import com.baxamoosa.popularmovies.MoviesActivity;
 import com.baxamoosa.popularmovies.PopularMovies;
 import com.baxamoosa.popularmovies.R;
 
-import java.util.ArrayList;
-
 import adapter.MovieAdapter;
+import data.FavoriteContract;
 import model.Movie;
 import network.FetchMoviesTask;
+import timber.log.Timber;
 
-public class MoviesFragment extends android.support.v4.app.Fragment {
+public class MoviesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
+    public static final int COL_ID = 0;
+    public static final int COL_THUMBNAIL = 1;
+    public static final int COL_TITLE = 2;
+    public static final int COL_SYNOPSIS = 3;
+    public static final int COL_RATING = 4;
+    public static final int COL_DATE = 5;
+    private static final int CURSOR_LOADER_ID = 0;
     public static Movie[] mMovies;
     public static RecyclerView mRecyclerView;
     public static RecyclerView.Adapter mAdapter;
     private final String TAG = MoviesFragment.class.getSimpleName();
     private RecyclerView.LayoutManager mLayoutManager;
-    private ArrayList<Movie> listOfMovies;
-    private String mSortBy;
+    private Resources res;
+    private SharedPreferences sharedPref;
+    private String sort_type;
+    private Cursor mFavoriteCursor;
+    private Uri mUri;
 
     public MoviesFragment() {
+        res = PopularMovies.getAppContext().getResources();
+
+        // Getting sort order preference
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(PopularMovies.getAppContext());
+        sort_type = sharedPref.getString(res.getString(R.string.prefs_sorting_key), res.getString(R.string.prefs_sorting_default));
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FetchMoviesTask moviesTask = new FetchMoviesTask();
-        moviesTask.execute();
+
+        if (!sort_type.equals(res.getString(R.string.favorites))) { // not favorites
+            FetchMoviesTask moviesTask = new FetchMoviesTask();
+            moviesTask.execute();
+        }
     }
 
     @Override
@@ -65,14 +93,80 @@ public class MoviesFragment extends android.support.v4.app.Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
         return rootView;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        if (sort_type.equals(res.getString(R.string.favorites))) { // for favorites
+            getLoaderManager().initLoader(CURSOR_LOADER_ID, null, MoviesFragment.this);
+        }
         mAdapter = new MovieAdapter(mMovies);
         mRecyclerView.setAdapter(mAdapter);
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        Timber.v(TAG + " inside onCreateLoader(int id, Bundle args)");
+        return new CursorLoader(getActivity(),
+                FavoriteContract.FavoritesList.CONTENT_URI,
+                null,
+                null,
+                null,
+                null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        Timber.v(TAG + " onLoadFinished(Loader<Cursor> loader, Cursor data)");
+        mFavoriteCursor = data;
+        mFavoriteCursor.moveToFirst();
+        DatabaseUtils.dumpCursor(data);
+
+        // Create Movie objects array
+        Movie[] movies = new Movie[data.getCount()];
+        // Timber.v(TAG + " moviesArray.length()" + " " + moviesArray.length());
+
+        for (int i = 0; i < data.getCount(); i++) {
+            Timber.v(TAG + " i = " + i);
+
+            movies[i] = new Movie();
+
+            // get id
+            // Timber.v(TAG + " id :" + " " + movie.getString("id"));
+            movies[i].setId(mFavoriteCursor.getString(COL_ID));
+
+            // Get title
+            // Timber.v(TAG + " original_title :" + " " + movie.getString("original_title"));
+            movies[i].setTitle(mFavoriteCursor.getString(COL_TITLE));
+
+            // Get synopsis
+            // Timber.v(TAG + " overview :" + " " + movie.getString("overview"));
+            movies[i].setSynopsis(mFavoriteCursor.getString(COL_SYNOPSIS));
+
+            // Get release date
+            // Timber.v(TAG + " release_date :" + " " + movie.getString("release_date"));
+            movies[i].setDate(mFavoriteCursor.getString(COL_DATE));
+
+            // Get poster path
+            // Timber.v(TAG + " poster_path :" + " " + movie.getString("poster_path"));
+            movies[i].setThumbnail(mFavoriteCursor.getString(COL_THUMBNAIL));
+
+            // Get rating
+            // Timber.v(TAG + " vote_average :" + " " + movie.getString("vote_average"));
+            movies[i].setRating(mFavoriteCursor.getString(COL_RATING));
+        }
+
+        mAdapter = new MovieAdapter(movies);
+        mRecyclerView.setAdapter(mAdapter);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        Timber.v(TAG + " onLoaderReset(Loader<Cursor> loader)");
     }
 
     /**

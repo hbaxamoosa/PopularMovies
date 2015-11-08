@@ -13,6 +13,7 @@ import com.squareup.picasso.Picasso;
 
 import fragments.MoviesFragment;
 import model.Movie;
+import timber.log.Timber;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapterViewHolder> {
 
@@ -28,7 +29,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
     @Override
     public MovieAdapter.MovieAdapterViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        // Timber.v(TAG + " inside onCreateViewHolder");
+        Timber.v(TAG + " inside onCreateViewHolder");
         View itemView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.adapter_movieadapter, viewGroup, false);
         if (MoviesActivity.mTwoPane == true && MoviesActivity.firstLoad == true) { // set the selected item to position 0 for tablet
             // Timber.v(TAG + " calling ((MoviesFragment.Callback) context).onItemSelected(0, mMovies)");
@@ -40,17 +41,18 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
     @Override
     public void onBindViewHolder(MovieAdapter.MovieAdapterViewHolder movieAdapterViewHolder, int i) {
-        // Timber.v(TAG + " inside onBindViewHolder");
+        Timber.v(TAG + " inside onBindViewHolder");
         String thumbnail = mMovies[i].getThumbnail();
-        // Timber.v(TAG + " thumbnail = " + thumbnail);
+        Timber.v(TAG + " thumbnail = " + thumbnail);
 
         String poster_path = "http://image.tmdb.org/t/p/w500/" + thumbnail;
-        // Timber.v(TAG + " poster_path = " + poster_path);
+        Timber.v(TAG + " poster_path = " + poster_path);
         Picasso.with(movieAdapterViewHolder.itemView.getContext()).load(poster_path).into(movieAdapterViewHolder.imageView);
     }
 
     @Override
     public int getItemCount() {
+        Timber.v(TAG + " getItemCount() is " + getItemCount());
         return (null != mMovies ? mMovies.length : 0);
     }
 
@@ -62,7 +64,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
         public MovieAdapterViewHolder(View itemView) {
             super(itemView);
 
-            // Timber.v(TAG + " inside MovieAdapterViewHolder(View itemView)");
+            Timber.v(TAG + " inside MovieAdapterViewHolder(View itemView)");
             imageView = (ImageView) itemView.findViewById(R.id.imageView);
             itemView.setOnClickListener(this);
         }

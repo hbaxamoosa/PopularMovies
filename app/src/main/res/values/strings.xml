@@ -26,4 +26,7 @@
 
     <string name="sorting_label">Sort Option</string>
     <string name="favorite_button">Mark as Favorite</string>
+
+    <!-- For Content Provider -->
+    <string name="content_authority">com.baxamoosa.popularmovies</string>
 </resources>

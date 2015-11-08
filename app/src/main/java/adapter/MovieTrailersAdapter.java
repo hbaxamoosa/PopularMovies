@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.baxamoosa.popularmovies.R;
 
 import model.MovieTrailers;
-import timber.log.Timber;
 
 public class MovieTrailersAdapter extends ArrayAdapter<MovieTrailers> {
 
@@ -47,13 +46,9 @@ public class MovieTrailersAdapter extends ArrayAdapter<MovieTrailers> {
             holder = (MovieTrailersHolder) row.getTag();
         }
 
-        if (getCount() == 0) {
-            Timber.v(TAG + " getCount() == 0 is true");
-            holder.textView.setText("No Trailers!");
-        } else {
-            Timber.v(TAG + " getCount() == 0 is false");
-            holder.textView.setText(mMovieTrailers[position].getName());
-        }
+        // Timber.v(TAG + " getCount() == 0 is false");
+        holder.textView.setText(mMovieTrailers[position].getName());
+
         return row;
     }
 

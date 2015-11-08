@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import fragments.DetailFragment;
 import fragments.MoviesFragment;
 import model.Movie;
-import timber.log.Timber;
 
 public class MoviesActivity extends AppCompatActivity implements MoviesFragment.Callback {
 
@@ -35,7 +34,7 @@ public class MoviesActivity extends AppCompatActivity implements MoviesFragment.
         outState.putParcelableArrayList("key", listOfMovies);
         outState.putString("sort_by", mSortBy);
         super.onSaveInstanceState(outState);
-        Timber.v(TAG + " onSaveInstanceState");
+        // Timber.v(TAG + " onSaveInstanceState");
         firstLoad = true;
     }
 
@@ -112,7 +111,7 @@ public class MoviesActivity extends AppCompatActivity implements MoviesFragment.
 
         if (mSortBy == null || mSortBy.compareTo(sortBy) != 0) {
             mSortBy = sortBy;
-            Timber.v(TAG + " onResume()");
+            // Timber.v(TAG + " onResume()");
             // if back from settings activity, the preference value may be changed
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             MoviesFragment fragment = new MoviesFragment();

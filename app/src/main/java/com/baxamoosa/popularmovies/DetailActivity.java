@@ -7,6 +7,9 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.ImageView;
+
+import com.squareup.picasso.Picasso;
 
 import fragments.DetailFragment;
 
@@ -37,21 +40,28 @@ public class DetailActivity extends AppCompatActivity {
         if (appBarLayout != null) {
             // Timber.v(TAG + " appBarLayout != null");
             appBarLayout.setTitle(this.getIntent().getExtras().getString("title"));
+            ImageView backdrop = (ImageView) this.findViewById(R.id.backdrop);
+            String backdrop_path = "http://image.tmdb.org/t/p/w500/" + this.getIntent().getExtras().getString("poster_thumbnail");
+            Picasso.with(this).load(backdrop_path).into(backdrop);
         }
         // Timber.v(TAG + " Activity Created");
 
-        if (MoviesActivity.mTwoPane == true && getIntent().getExtras() == null){
+        if (MoviesActivity.mTwoPane && getIntent().getExtras() == null){
             // initial draw od fragments
             // Timber.v(TAG + " MoviesFragment.mTwoPane is " + MoviesActivity.mTwoPane);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_detail_container, new DetailFragment())
                     .commit();
-        } else if (MoviesActivity.mTwoPane == true && getIntent().getExtras() != null) {
+        } else if (MoviesActivity.mTwoPane && getIntent().getExtras() != null) {
             // called from MovieAdapter with intents
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_detail_container, new DetailFragment())
                     .commit();
         }
+
+        /*getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_detail_container, new DetailFragment())
+                .commit();*/
     }
 
     @Override
