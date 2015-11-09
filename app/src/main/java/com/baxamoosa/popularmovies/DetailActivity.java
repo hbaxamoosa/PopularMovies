@@ -24,15 +24,6 @@ public class DetailActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
 
-        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
-
         // Show the Up button in the action bar.
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -47,8 +38,7 @@ public class DetailActivity extends AppCompatActivity {
         // Timber.v(TAG + " Activity Created");
 
         if (MoviesActivity.mTwoPane && getIntent().getExtras() == null){
-            // initial draw od fragments
-            // Timber.v(TAG + " MoviesFragment.mTwoPane is " + MoviesActivity.mTwoPane);
+            // called from MovieAdapter with arguments
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_detail_container, new DetailFragment())
                     .commit();
@@ -58,10 +48,6 @@ public class DetailActivity extends AppCompatActivity {
                     .replace(R.id.fragment_detail_container, new DetailFragment())
                     .commit();
         }
-
-        /*getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_detail_container, new DetailFragment())
-                .commit();*/
     }
 
     @Override

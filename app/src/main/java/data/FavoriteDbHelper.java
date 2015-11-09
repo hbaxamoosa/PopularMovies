@@ -4,8 +4,6 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import timber.log.Timber;
-
 /**
  * Manages a local database for movie favorites.
  */
@@ -13,7 +11,7 @@ public class FavoriteDbHelper extends SQLiteOpenHelper {
 
     static final String DATABASE_NAME = "favorites.db";
     // If you change the database schema, you must increment the database version.
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     private final String TAG = FavoriteDbHelper.class.getSimpleName();
 
     public FavoriteDbHelper(Context context) {
@@ -32,7 +30,7 @@ public class FavoriteDbHelper extends SQLiteOpenHelper {
                 FavoriteContract.FavoritesList.COLUMN_DATE + " TEXT NOT NULL " +
                 " );";
 
-        Timber.v(TAG + " SQL_CREATE_FAVORITES_TABLE is " + SQL_CREATE_FAVORITES_TABLE);
+        // Timber.v(TAG + " SQL_CREATE_FAVORITES_TABLE is " + SQL_CREATE_FAVORITES_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_FAVORITES_TABLE);
     }
 

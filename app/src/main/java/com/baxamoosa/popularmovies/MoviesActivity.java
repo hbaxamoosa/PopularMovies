@@ -34,7 +34,6 @@ public class MoviesActivity extends AppCompatActivity implements MoviesFragment.
         outState.putParcelableArrayList("key", listOfMovies);
         outState.putString("sort_by", mSortBy);
         super.onSaveInstanceState(outState);
-        // Timber.v(TAG + " onSaveInstanceState");
         firstLoad = true;
     }
 
@@ -49,15 +48,6 @@ public class MoviesActivity extends AppCompatActivity implements MoviesFragment.
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
-
-        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
 
         ConnectivityManager cm =
                 (ConnectivityManager) PopularMovies.getAppContext().getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -175,6 +165,7 @@ public class MoviesActivity extends AppCompatActivity implements MoviesFragment.
             arguments.putString("poster_thumbnail", mMovies[position].getThumbnail());
             arguments.putString("release_date", mMovies[position].getDate());
             arguments.putString("rating", mMovies[position].getRating());
+            arguments.putString("synopsis", mMovies[position].getSynopsis());
 
             DetailFragment fragment = new DetailFragment();
             fragment.setArguments(arguments);

@@ -5,7 +5,6 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -27,7 +26,6 @@ import adapter.MovieAdapter;
 import data.FavoriteContract;
 import model.Movie;
 import network.FetchMoviesTask;
-import timber.log.Timber;
 
 public class MoviesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -47,7 +45,6 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
     private SharedPreferences sharedPref;
     private String sort_type;
     private Cursor mFavoriteCursor;
-    private Uri mUri;
 
     public MoviesFragment() {
         res = PopularMovies.getAppContext().getResources();
@@ -110,7 +107,7 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        Timber.v(TAG + " inside onCreateLoader(int id, Bundle args)");
+        // Timber.v(TAG + " inside onCreateLoader(int id, Bundle args)");
         return new CursorLoader(getActivity(),
                 FavoriteContract.FavoritesList.CONTENT_URI,
                 null,
@@ -121,7 +118,7 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        Timber.v(TAG + " onLoadFinished(Loader<Cursor> loader, Cursor data)");
+        // Timber.v(TAG + " onLoadFinished(Loader<Cursor> loader, Cursor data)");
         mFavoriteCursor = data;
         mFavoriteCursor.moveToFirst();
         DatabaseUtils.dumpCursor(data);
@@ -130,34 +127,36 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
         Movie[] movies = new Movie[data.getCount()];
         // Timber.v(TAG + " moviesArray.length()" + " " + moviesArray.length());
 
-        for (int i = 0; i < data.getCount(); i++) {
-            Timber.v(TAG + " i = " + i);
+        for (int i = 0; i < mFavoriteCursor.getCount(); i++) {
+            // Timber.v(TAG + " i = " + i);
 
             movies[i] = new Movie();
 
             // get id
-            // Timber.v(TAG + " id :" + " " + movie.getString("id"));
+            // Timber.v(TAG + " id :" + " " + mFavoriteCursor.getString(COL_ID));
             movies[i].setId(mFavoriteCursor.getString(COL_ID));
 
             // Get title
-            // Timber.v(TAG + " original_title :" + " " + movie.getString("original_title"));
+            // Timber.v(TAG + " original_title :" + " " + mFavoriteCursor.getString(COL_TITLE));
             movies[i].setTitle(mFavoriteCursor.getString(COL_TITLE));
 
-            // Get synopsis
-            // Timber.v(TAG + " overview :" + " " + movie.getString("overview"));
-            movies[i].setSynopsis(mFavoriteCursor.getString(COL_SYNOPSIS));
-
-            // Get release date
-            // Timber.v(TAG + " release_date :" + " " + movie.getString("release_date"));
-            movies[i].setDate(mFavoriteCursor.getString(COL_DATE));
-
             // Get poster path
-            // Timber.v(TAG + " poster_path :" + " " + movie.getString("poster_path"));
+            // Timber.v(TAG + " poster_path :" + " " + mFavoriteCursor.getString(COL_THUMBNAIL));
             movies[i].setThumbnail(mFavoriteCursor.getString(COL_THUMBNAIL));
 
+            // Get synopsis
+            // Timber.v(TAG + " overview :" + " " + mFavoriteCursor.getString(COL_SYNOPSIS));
+            movies[i].setSynopsis(mFavoriteCursor.getString(COL_SYNOPSIS));
+
             // Get rating
-            // Timber.v(TAG + " vote_average :" + " " + movie.getString("vote_average"));
+            // Timber.v(TAG + " vote_average :" + " " + mFavoriteCursor.getString(COL_RATING));
             movies[i].setRating(mFavoriteCursor.getString(COL_RATING));
+
+            // Get release date
+            // Timber.v(TAG + " release_date :" + " " + mFavoriteCursor.getString(COL_DATE));
+            movies[i].setDate(mFavoriteCursor.getString(COL_DATE));
+
+            mFavoriteCursor.moveToNext();
         }
 
         mAdapter = new MovieAdapter(movies);
@@ -166,7 +165,7 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        Timber.v(TAG + " onLoaderReset(Loader<Cursor> loader)");
+        // Timber.v(TAG + " onLoaderReset(Loader<Cursor> loader)");
     }
 
     /**

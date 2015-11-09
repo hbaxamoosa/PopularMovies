@@ -5,7 +5,6 @@ import android.content.Context;
 import android.util.Log;
 
 import com.facebook.stetho.Stetho;
-import com.squareup.leakcanary.LeakCanary;
 
 import timber.log.Timber;
 
@@ -22,7 +21,7 @@ public class PopularMovies extends Application {
         super.onCreate();
         PopularMovies.context = getApplicationContext();
         Stetho.initializeWithDefaults(this); // http://facebook.github.io/stetho/
-        LeakCanary.install(this); // https://github.com/square/leakcanary
+        // LeakCanary.install(this); // https://github.com/square/leakcanary
 
         //Including Jake Wharton's Timber logging library
         if (BuildConfig.DEBUG) {
